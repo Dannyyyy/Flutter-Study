@@ -3,25 +3,9 @@ import 'package:flutter_app/tabs/first_tab.dart';
 import 'package:flutter_app/tabs/second_tab.dart';
 import 'package:flutter_app/tabs/third_tab.dart';
 import 'package:flutter_app/pages/info_page.dart';
-
-/*
-  @override
-  Widget build(BuildContext context) {
-    return new ListView.builder(
-        itemCount: _items.length,
-        itemBuilder: (context, i){
-          if(i.isOdd) return new Divider();
-
-          print('i: $i');
-
-          return new ListTile(title: new Text(_items[i]));
-        }
-    );
-  }
-  */
+import 'package:flutter_app/pages/settings_page.dart';
 
 void main() => runApp(App());
-
 
 class HomePage extends StatefulWidget {
   @override
@@ -40,8 +24,13 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     controller = new TabController(length: 3, vsync: this);
   }
 
+
   void navInfo(BuildContext context) {
     Navigator.of(context).pushNamed('/info');
+  }
+
+  void navSettings(BuildContext context) {
+    Navigator.of(context).pushNamed('/settings');
   }
 
   @override
@@ -64,8 +53,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     onPressed: () => navInfo(context),
                   ),
                   new IconButton(
-                    icon: new Icon(Icons.monetization_on),
-                    onPressed: () {},
+                    icon: new Icon(Icons.settings),
+                    onPressed: () => navSettings(context)
                   )
                 ],
               ),
@@ -134,6 +123,7 @@ class App extends StatelessWidget
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => new HomePage(),
         '/info': (BuildContext context) => new InfoPage(),
+        '/settings': (BuildContext context) => new SettingsPage(),
       },
     );
   }
