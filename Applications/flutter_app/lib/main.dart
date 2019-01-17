@@ -4,6 +4,7 @@ import 'package:flutter_app/tabs/second_tab.dart';
 import 'package:flutter_app/tabs/third_tab.dart';
 import 'package:flutter_app/pages/info_page.dart';
 import 'package:flutter_app/pages/settings_page.dart';
+import 'package:flutter_app/pages/stock_page.dart';
 
 void main() => runApp(App());
 
@@ -31,6 +32,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void navSettings(BuildContext context) {
     Navigator.of(context).pushNamed('/settings');
+  }
+
+  void navStocks(BuildContext context) {
+    Navigator.of(context).pushNamed('/stocks');
   }
 
   @override
@@ -74,11 +79,11 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     ),
                     new Divider(),
                     new ListTile(
-                        title: new Text("Sample Form"),
-                        trailing: new Icon(Icons.edit),
+                        title: new Text("Stocks"),
+                        trailing: new Icon(Icons.card_travel),
                         onTap: () {
                           Navigator.of(context).pop();
-                          navInfo(context);
+                          navStocks(context);
                         }),
                     new ListTile(
                         title: new Text("About"),
@@ -119,11 +124,13 @@ class App extends StatelessWidget
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
+      debugShowCheckedModeBanner: false,
       initialRoute: '/',
       routes: <String, WidgetBuilder>{
         '/': (BuildContext context) => new HomePage(),
         '/info': (BuildContext context) => new InfoPage(),
         '/settings': (BuildContext context) => new SettingsPage(),
+        '/stocks': (BuildContext context)  => new StockPage()
       },
     );
   }
