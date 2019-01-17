@@ -5,6 +5,7 @@ import 'package:flutter_app/tabs/third_tab.dart';
 import 'package:flutter_app/pages/info_page.dart';
 import 'package:flutter_app/pages/settings_page.dart';
 import 'package:flutter_app/pages/stock_page.dart';
+import 'package:flutter_app/pages/isolate_page.dart';
 
 void main() => runApp(App());
 
@@ -36,6 +37,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void navStocks(BuildContext context) {
     Navigator.of(context).pushNamed('/stocks');
+  }
+
+  void navIsolate(BuildContext context) {
+    Navigator.of(context).pushNamed('/isolate');
   }
 
   @override
@@ -92,6 +97,13 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           Navigator.of(context).pop();
                           navInfo(context);
                         }),
+                    new ListTile(
+                        title: new Text("Isolate"),
+                        trailing: new Icon(Icons.filter_tilt_shift),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          navIsolate(context);
+                        }),
                   ],
                 ),
               ),
@@ -130,7 +142,8 @@ class App extends StatelessWidget
         '/': (BuildContext context) => new HomePage(),
         '/info': (BuildContext context) => new InfoPage(),
         '/settings': (BuildContext context) => new SettingsPage(),
-        '/stocks': (BuildContext context)  => new StockPage()
+        '/stocks': (BuildContext context)  => new StockPage(),
+        '/isolate': (BuildContext context)  => new IsolatePage(),
       },
     );
   }
