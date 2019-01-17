@@ -13,6 +13,23 @@ class StockViewList extends StatefulWidget
 
 class StockViewListState extends State<StockViewList>
 {
+  _removeStock(Stock stock)
+  {
+    setState(() {
+      this.widget.stocks.remove(stock);
+    });
+
+    Scaffold.of(context).removeCurrentSnackBar();
+
+    Scaffold.of(context).showSnackBar(
+        SnackBar(
+          content: new Text('Removed ${stock.name}!'),
+          duration: new Duration(seconds: 3),
+          backgroundColor: Colors.red[300],
+        )
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
@@ -20,7 +37,15 @@ class StockViewListState extends State<StockViewList>
         itemCount: widget.stocks.length,
         itemBuilder: (context, index) {
           Stock stock = widget.stocks[index];
-          return new ListTile(title: new Text(stock.name), subtitle: new Text('${stock.cost ?? "Cost not found"} , Last update: ${stock.lastUpdateDateTime}'));
+
+          return Dismissible(
+            key: Key(stock.name),
+            background: Container(color: Colors.blue),
+            onDismissed: (direction) {
+              _removeStock(stock);
+            },
+            child: new ListTile(title: new Text(stock.name), subtitle: new Text('${stock.cost ?? "Cost not found"} , last update: ${stock.lastUpdateDateTime}'))
+          );
         }
     );
   }
