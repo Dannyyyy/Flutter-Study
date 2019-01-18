@@ -7,6 +7,7 @@ import 'package:flutter_app/pages/settings_page.dart';
 import 'package:flutter_app/pages/stock_page.dart';
 import 'package:flutter_app/pages/isolate_page.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter_app/pages/scoped_page.dart';
 
 List<CameraDescription> cameras = new List<CameraDescription>();
 
@@ -53,6 +54,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     Navigator.of(context).pushNamed('/isolate');
   }
 
+  void navScoped(BuildContext context) {
+    Navigator.of(context).pushNamed('/scoped');
+  }
+
   @override
   void dispose() {
     // Dispose of the Tab Controller
@@ -90,7 +95,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 child: new ListView(
                   children: [
                     new ListTile(
-                      title: new Text("Welcome to App"),
+                      title: new Text("Menu"),
                     ),
                     new Divider(),
                     new ListTile(
@@ -101,18 +106,18 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           navStocks(context);
                         }),
                     new ListTile(
-                        title: new Text("About"),
-                        trailing: new Icon(Icons.info),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          navInfo(context);
-                        }),
-                    new ListTile(
                         title: new Text("Isolate"),
                         trailing: new Icon(Icons.filter_tilt_shift),
                         onTap: () {
                           Navigator.of(context).pop();
                           navIsolate(context);
+                        }),
+                    new ListTile(
+                        title: new Text("Scoped"),
+                        trailing: new Icon(Icons.card_travel),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          navScoped(context);
                         }),
                   ],
                 ),
@@ -154,6 +159,7 @@ class App extends StatelessWidget
         '/settings': (BuildContext context) => new SettingsPage(),
         '/stocks': (BuildContext context)  => new StockPage(),
         '/isolate': (BuildContext context)  => new IsolatePage(),
+        '/scoped': (BuildContext context) => new ScopedPage()
       },
     );
   }
