@@ -21,6 +21,8 @@ dependencies:
   cupertino_icons: ^0.1.2
   english_words: ^3.1.0
   intl: ^0.15.7
+  camera: ^0.2.9+1
+  path_provider: ^0.4.1
   validator:
     git:
       url:

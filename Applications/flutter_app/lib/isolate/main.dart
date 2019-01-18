@@ -1,13 +1,10 @@
 import 'dart:io';
 import 'dart:async';
 import 'dart:isolate';
-import 'package:english_words/english_words.dart';
 
 class IsolateWorker {
 
   Isolate isolate;
-
-  List<String> tiles = new List<String>();
 
   Future<void> start() async {
     ReceivePort receivePort = ReceivePort();
@@ -17,19 +14,9 @@ class IsolateWorker {
     });
   }
 
-  String getTile() {
-    if(tiles.length > 0)
-      return tiles.last;
-
-    return "None";
-  }
-
   void runTimer(SendPort sendPort) {
     int counter = 0;
     Timer.periodic(new Duration(seconds: 3), (Timer t) {
-      var wordPair = WordPair.random();
-      wordPair.toString();
-      tiles.add(wordPair.toString());
       counter++;
       String msg = 'notification' + counter.toString();
       print(msg);

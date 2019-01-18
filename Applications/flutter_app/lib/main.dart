@@ -6,8 +6,18 @@ import 'package:flutter_app/pages/info_page.dart';
 import 'package:flutter_app/pages/settings_page.dart';
 import 'package:flutter_app/pages/stock_page.dart';
 import 'package:flutter_app/pages/isolate_page.dart';
+import 'package:camera/camera.dart';
 
-void main() => runApp(App());
+List<CameraDescription> cameras = new List<CameraDescription>();
+
+Future<void> main() async {
+  try {
+    cameras = await availableCameras();
+  } on CameraException catch (e) {
+    logError(e.code, e.description);
+  }
+  runApp(App());
+}
 
 class HomePage extends StatefulWidget {
   @override
@@ -72,7 +82,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
               body: new TabBarView(
                 // Add tabs as widgets
                 children: <Widget>[
-                  new FirstTab(), new SecondTab(), new ThirdTab()],
+                  new FirstTab(), new SecondTab(), new CameraExampleHome(cameras: cameras)],
                 // set the controller
                 controller: controller,
               ),
