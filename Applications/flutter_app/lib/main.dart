@@ -130,7 +130,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       icon: new Icon(Icons.person_add),
                     ),
                     new Tab(
-                      icon: new Icon(Icons.airport_shuttle),
+                      icon: new Icon(Icons.photo_camera),
                     ),
                   ],
                   controller: controller,

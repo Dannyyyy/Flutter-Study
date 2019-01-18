@@ -30,6 +30,18 @@ IconData getCameraLensIcon(CameraLensDirection direction) {
   throw ArgumentError('Unknown lens direction');
 }
 
+String getCameraLensText(CameraLensDirection direction) {
+  switch (direction) {
+    case CameraLensDirection.back:
+      return "Back";
+    case CameraLensDirection.front:
+      return "Front";
+    case CameraLensDirection.external:
+      return "External";
+  }
+  throw ArgumentError('Unknown lens direction');
+}
+
 void logError(String code, String message) =>
     print('Error: $code\nError Message: $message');
 
@@ -43,9 +55,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: const Text('Camera example'),
-      ),
       body: Column(
         children: <Widget>[
           Expanded(
@@ -57,11 +66,9 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
                 ),
               ),
               decoration: BoxDecoration(
-                color: Colors.black,
+                color: Colors.blueGrey,
                 border: Border.all(
-                  color: controller != null && controller.value.isRecordingVideo
-                      ? Colors.redAccent
-                      : Colors.grey,
+                  color: Colors.white,
                   width: 3.0,
                 ),
               ),
@@ -71,10 +78,10 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
           Padding(
             padding: const EdgeInsets.all(5.0),
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
               children: <Widget>[
                 _cameraTogglesRowWidget(),
-                _thumbnailWidget(),
+                //_thumbnailWidget(),
               ],
             ),
           ),
@@ -87,7 +94,7 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
   Widget _cameraPreviewWidget() {
     if (controller == null || !controller.value.isInitialized) {
       return const Text(
-        'Tap a camera',
+        'Camera off',
         style: TextStyle(
           color: Colors.white,
           fontSize: 24.0,
@@ -123,16 +130,15 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       mainAxisSize: MainAxisSize.max,
-      children: <Widget>[
-        IconButton(
-          icon: const Icon(Icons.camera_alt),
-          color: Colors.blue,
-          onPressed: controller != null &&
-              controller.value.isInitialized &&
-              !controller.value.isRecordingVideo
-              ? onTakePictureButtonPressed
-              : null,
-        ),
+      children: <Widget>[ controller != null && controller.value.isInitialized ?
+        RawMaterialButton(
+            onPressed: onTakePictureButtonPressed,
+            shape: new CircleBorder(),
+            elevation: 2.0,
+            fillColor: Colors.orange[100],
+            padding: const EdgeInsets.all(15.0),
+            child: Icon(Icons.camera_alt, color: Colors.blue[300])
+        ) : Text("Select camera")
       ],
     );
   }
@@ -147,14 +153,18 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
       for (CameraDescription cameraDescription in widget.cameras) {
         toggles.add(
           SizedBox(
-            width: 90.0,
+            width: 150,
             child: RadioListTile<CameraDescription>(
-              title: Icon(getCameraLensIcon(cameraDescription.lensDirection)),
+              title: Row(children: <Widget>[
+                  Text(getCameraLensText(cameraDescription.lensDirection)),
+                  Icon(getCameraLensIcon(cameraDescription.lensDirection))
+                ],
+              ),
               groupValue: controller?.description,
               value: cameraDescription,
-              onChanged: controller != null && controller.value.isRecordingVideo
-                  ? null
-                  : onNewCameraSelected,
+              onChanged: onNewCameraSelected,
+              activeColor: Colors.orange,
+
             ),
           ),
         );
@@ -201,7 +211,9 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
         setState(() {
           imagePath = filePath;
         });
-        if (filePath != null) showInSnackBar('Picture saved to $filePath');
+        if (filePath != null) {
+          showInSnackBar('Picture saved to $filePath');
+        }
       }
     });
   }
@@ -234,7 +246,30 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
     logError(e.code, e.description);
     showInSnackBar('Error: ${e.code}\n${e.description}');
   }
+
+  _exitApp() {
+    return showDialog(
+      context: context,
+      builder : (context) => new AlertDialog(
+        title: new Text('Do you want to go Home?'),
+        content: Image.file(File(imagePath)),
+        actions: <Widget>[
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: new Text('No'),
+          ),
+          new FlatButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            child: new Text('Yes'),
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+
+
 
 class CameraApp extends StatelessWidget {
   @override
