@@ -8,6 +8,7 @@ import 'package:flutter_app/pages/stock_page.dart';
 import 'package:flutter_app/pages/isolate_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_app/pages/scoped_page.dart';
+import 'package:flutter_app/pages/jokes_page.dart';
 
 List<CameraDescription> cameras = new List<CameraDescription>();
 
@@ -56,6 +57,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   void navScoped(BuildContext context) {
     Navigator.of(context).pushNamed('/scoped');
+  }
+
+  void navJokes(BuildContext context) {
+    Navigator.of(context).pushNamed('/jokes');
   }
 
   @override
@@ -119,6 +124,13 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                           Navigator.of(context).pop();
                           navScoped(context);
                         }),
+                    new ListTile(
+                        title: new Text("Jokes"),
+                        trailing: new Icon(Icons.thumbs_up_down),
+                        onTap: () {
+                          Navigator.of(context).pop();
+                          navJokes(context);
+                        }),
                   ],
                 ),
               ),
@@ -159,7 +171,8 @@ class App extends StatelessWidget
         '/settings': (BuildContext context) => new SettingsPage(),
         '/stocks': (BuildContext context)  => new StockPage(),
         '/isolate': (BuildContext context)  => new IsolatePage(),
-        '/scoped': (BuildContext context) => new ScopedPage()
+        '/scoped': (BuildContext context) => new ScopedPage(),
+        '/jokes': (BuildContext context) => new JokesPage()
       },
     );
   }
