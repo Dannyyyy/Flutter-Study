@@ -4,7 +4,7 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter_app/models/contact.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_app/models/city.dart';
 
 class DBService
 {
@@ -19,8 +19,9 @@ class DBService
 
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "test.db");
-    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate);
+    String path = join(documentsDirectory.path, "test2.db");
+    var theDb = await openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
+
     return theDb;
   }
 
@@ -28,7 +29,14 @@ class DBService
     // When creating the db, create the table
     await db.execute(
         "CREATE TABLE Contact(id INTEGER PRIMARY KEY, name TEXT, email TEXT, phone TEXT, favoriteColor TEXT, dob TEXT)");
+
     print("Created tables");
+  }
+
+  void _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    await db.execute(
+        "CREATE TABLE City(id INTEGER PRIMARY KEY, name TEXT, likeCount INTEGER, dislikeCount INTEGER)");
+    print("Upgrade tables");
   }
 
   Future<List<Contact>> getContacts() async {
@@ -41,31 +49,51 @@ class DBService
     return contacts;
   }
 
+  Future<List<City>> getCities() async {
+    var dbClient = await db;
+    List<Map> list = await dbClient.rawQuery('SELECT * FROM City');
+    List<City> cities = new List();
+    list.forEach((l) => cities.add(new City(l["name"], l["likeCount"], l["dislikeCount"])));
+    print(cities.length);
+
+    return cities;
+  }
+
+  void saveCity(City city) async {
+    var dbClient = await db;
+    await dbClient.transaction((txn) async {
+      return await txn.rawInsert(
+        'INSERT INTO City(name, likeCount, dislikeCount) VALUES(' +
+          '\'' +
+          city.name +
+          '\',\'' +
+          city.likeCount.toString() +
+          '\',\'' +
+          city.dislikeCount.toString() +
+          '\'' +
+          ')'
+      );
+    });
+  }
+
   void saveContact(Contact contact) async {
     var dbClient = await db;
     await dbClient.transaction((txn) async {
       return await txn.rawInsert(
-          'INSERT INTO Contact(name, email, phone, favoriteColor, dob) VALUES(' +
-              '\'' +
-              contact.name +
-              '\'' +
-              ',' +
-              '\'' +
-              contact.email +
-              '\'' +
-              ',' +
-              '\'' +
-              contact.phone +
-              '\'' +
-              ',' +
-              '\'' +
-              contact.favoriteColor +
-              '\'' +
-              ',' +
-              '\'' +
-              contact.dob.toString() +
-              '\'' +
-              ')');
+        'INSERT INTO Contact(name, email, phone, favoriteColor, dob) VALUES(' +
+          '\'' +
+          contact.name +
+          '\',\'' +
+          contact.email +
+          '\',\'' +
+          contact.phone +
+          '\',\'' +
+          contact.favoriteColor +
+          '\',\'' +
+          contact.dob.toString() +
+          '\'' +
+          ')'
+        );
     });
   }
 }
