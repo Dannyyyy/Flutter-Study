@@ -9,6 +9,7 @@ import 'package:flutter_app/pages/isolate_page.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter_app/pages/scoped_page.dart';
 import 'package:flutter_app/pages/jokes_page.dart';
+import 'package:flutter_app/pages/add_contact_page.dart';
 
 List<CameraDescription> cameras = new List<CameraDescription>();
 
@@ -144,7 +145,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                       icon: new Icon(Icons.favorite),
                     ),
                     new Tab(
-                      icon: new Icon(Icons.person_add),
+                      icon: new Icon(Icons.contacts),
                     ),
                     new Tab(
                       icon: new Icon(Icons.photo_camera),
@@ -172,7 +173,8 @@ class App extends StatelessWidget
         '/stocks': (BuildContext context)  => new StockPage(),
         '/isolate': (BuildContext context)  => new IsolatePage(),
         '/scoped': (BuildContext context) => new ScopedPage(),
-        '/jokes': (BuildContext context) => new JokesPage()
+        '/jokes': (BuildContext context) => new JokesPage(),
+        '/contact': (BuildContext context) => new ContactPage(),
       },
     );
   }

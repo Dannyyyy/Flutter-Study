@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 import 'dart:convert';
 import 'package:flutter_app/models/contact.dart';
+import 'package:flutter_app/db/db_service.dart';
 
 class ContactService {
   static const _serviceUrl = 'http://mockbin.org/echo';
@@ -11,9 +12,12 @@ class ContactService {
   Future<Contact> createContact(Contact contact) async {
     try {
       String json = _toJson(contact);
-      final response =
-      await http.post(_serviceUrl, headers: _headers, body: json);
+      final response = await http.post(_serviceUrl, headers: _headers, body: json);
       var c = _fromJson(response.body);
+
+      DBService service = new DBService();
+      await service.saveContact(contact);
+
       return c;
     } catch (e) {
       print('Server Exception!!!');
@@ -24,12 +28,7 @@ class ContactService {
 
   Contact _fromJson(String json) {
     Map<String, dynamic> map = jsonDecode(json);
-    var contact = new Contact();
-    contact.name = map['name'];
-    contact.dob = new DateFormat.yMd().parseStrict(map['dob']);
-    contact.phone = map['phone'];
-    contact.email = map['email'];
-    contact.email = map['favoriteColor'];
+    var contact = new Contact(map['name'],map['email'], map['phone'], map['favoriteColor'], new DateFormat.yMd().parseStrict(map['dob']));
     return contact;
   }
 

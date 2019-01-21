@@ -268,9 +268,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
   }
 }
 
-
-
-
 class CameraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
