@@ -43,9 +43,8 @@ class DBService
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery('SELECT * FROM Contact');
     List<Contact> contacts = new List();
-    for (int i = 0; i < list.length; i++) {
-      contacts.add(new Contact(list[i]["name"], list[i]["email"], list[i]["phone"], list[i]["favoriteColor"], new DateTime.now()/*new DateFormat.yMd().parseStrict(list[i]["dob"])*/));
-    }
+    list.forEach((l) => contacts.add(new Contact(l["name"], l["email"], l["phone"], l["favoriteColor"], new DateTime.now())..id=l["id"]));
+
     return contacts;
   }
 
@@ -112,6 +111,15 @@ class DBService
           '\'' +
           ')'
         );
+    });
+  }
+
+  void deleteContact(int id) async {
+    var dbClient = await db;
+    await dbClient.transaction((txn) async {
+      return await txn.rawInsert(
+          'DELETE FROM Contact WHERE id = ' + '\'' + id.toString() + '\''
+      );
     });
   }
 }

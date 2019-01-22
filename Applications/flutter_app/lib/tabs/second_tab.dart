@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/models/contact.dart';
 import 'package:flutter_app/db/db_service.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 
 class AddContactTab extends StatefulWidget
 {
@@ -11,10 +12,18 @@ class AddContactTab extends StatefulWidget
 
 class AddContactTabState extends State<AddContactTab>
 {
+  DBService _service;
+
   Future<List<Contact>> _getContacts() async
   {
-    DBService db = new DBService();
-    return await db.getContacts();
+    return await _service.getContacts();
+  }
+
+  @override
+  initState()
+  {
+    _service = new DBService();
+    super.initState();
   }
 
   Color _getColor(String color)
@@ -43,7 +52,9 @@ class AddContactTabState extends State<AddContactTab>
                     return new ListView.builder(
                         itemCount: snapshot.data.length,
                         itemBuilder: (context, index) {
-                          return new Container(
+                          return new Slidable(delegate: new SlidableDrawerDelegate(),
+                            actionExtentRatio: 0.25,
+                            child: new Container(
                               decoration: new BoxDecoration(
                                 color: _getColor(snapshot.data[index].favoriteColor)
                               ),
@@ -80,6 +91,29 @@ class AddContactTabState extends State<AddContactTab>
                                 new Divider(height: 3)
                               ]
                             )
+                          ),
+                            actions: <Widget>[
+                              new IconSlideAction(
+                                caption: 'Copy',
+                                color: Colors.blue,
+                                icon: Icons.filter_none,
+                                onTap: () async {
+                                  await _service.saveContact(snapshot.data[index]..name+='-Copy');
+                                  setState(() { });
+                                },
+                              ),
+                            ],
+                            secondaryActions: <Widget>[
+                              new IconSlideAction(
+                                caption: 'Delete',
+                                color: Colors.red,
+                                icon: Icons.delete_forever,
+                                onTap: () async {
+                                  await _service.deleteContact(snapshot.data[index].id);
+                                  setState(() { });
+                                },
+                              ),
+                            ],
                           );
                         }
                     );
