@@ -53,8 +53,7 @@ class DBService
     var dbClient = await db;
     List<Map> list = await dbClient.rawQuery('SELECT * FROM City');
     List<City> cities = new List();
-    list.forEach((l) => cities.add(new City(l["name"], l["likeCount"], l["dislikeCount"])));
-    print(cities.length);
+    list.forEach((l) => cities.add(new City(l["name"], l["likeCount"], l["dislikeCount"])..id=l["id"]));
 
     return cities;
   }
@@ -72,6 +71,25 @@ class DBService
           city.dislikeCount.toString() +
           '\'' +
           ')'
+      );
+    });
+  }
+
+  void updateCity(City city)  async {
+    var dbClient = await db;
+    await dbClient.transaction((txn) async {
+      return await txn.rawInsert(
+          'UPDATE City SET likeCount = \'' + city.likeCount.toString() + '\', dislikeCount = \'' + city.dislikeCount.toString()
+              +  '\' WHERE id = ' + '\'' + city.id.toString() + '\''
+      );
+    });
+  }
+
+  void deleteCity(City city)  async {
+    var dbClient = await db;
+    await dbClient.transaction((txn) async {
+      return await txn.rawInsert(
+          'DELETE FROM City WHERE id = ' + '\'' + city.id.toString() + '\''
       );
     });
   }

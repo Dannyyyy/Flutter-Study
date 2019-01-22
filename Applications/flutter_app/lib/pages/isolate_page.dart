@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:english_words/english_words.dart';
+import 'dart:math';
 
 class IsolatePageListView extends StatefulWidget {
   IsolatePageListView({Key key, this.tiles, this.scrollController}) : super(key: key);
@@ -14,6 +15,8 @@ class IsolatePageListView extends StatefulWidget {
 
 class IsolatePageListViewState extends State<IsolatePageListView> {
 
+  final Random random = new Random(DateTime.now().millisecond);
+  
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -23,7 +26,14 @@ class IsolatePageListViewState extends State<IsolatePageListView> {
               controller: widget.scrollController,
               itemCount: widget.tiles.length,
               itemBuilder: (context, index) {
-                return new ListTile(title: new Text(widget.tiles[index]));
+                return new Container(child:
+                      new Column(children: <Widget>[
+                      new ListTile(title: new Text(widget.tiles[index])),
+                      new Divider(height: 5)
+                    ]
+                  ),
+                  decoration: BoxDecoration(color: Color.fromARGB(random.nextInt(200), random.nextInt(200), random.nextInt(200), random.nextInt(200))),
+                );
               }
             )
         ),

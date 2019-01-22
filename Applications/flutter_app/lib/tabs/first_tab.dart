@@ -32,7 +32,7 @@ class DynamicListViewState extends State<DynamicListView> {
               child: new TextField(
                   decoration: InputDecoration(
                       contentPadding: EdgeInsets.all(15),
-                      hintText: "Enter text"
+                      hintText: "Enter city name ..."
                   ),
                   controller: eCtrl,
                   onSubmitted: (text) async {
@@ -44,44 +44,73 @@ class DynamicListViewState extends State<DynamicListView> {
               ),
               height: 50,
             ),
-            /*
-            new TextField(
-                decoration: InputDecoration(
-                    contentPadding: EdgeInsets.all(15),
-                    hintText: "Enter text"
-                ),
-                controller: eCtrl,
-                onSubmitted: (text) async {
-                  if (text != null && text.isNotEmpty) {
-                    await _service.saveCity(new City(text, 0,0));
-                    eCtrl.clear();
-                  }
-                }
-            ),
-            */
             new SizedBox(height: 400, child:
             new Center(
                 child: FutureBuilder<List<City>>(
                   future: _getCities(),
                   builder: (BuildContext context, AsyncSnapshot<List<City>> snapshot)
                   {
-                    print(snapshot);
                     if(snapshot.hasData)
                     {
                       return ListView.builder(
                           itemCount: snapshot.data.length,
                           itemBuilder: (context, index)
                           {
-                            return new ListTile(
-                              title: new Text(snapshot.data[index].name),
-                              subtitle: new Row(
-                                children: <Widget>[
-                                  new Text('Likes: ${snapshot.data[index].likeCount}'),
-                                  new SizedBox(width: 20),
-                                  new Text('Dislikes: ${snapshot.data[index].dislikeCount}')
-                                ],
-                              ),
-                            );
+                            return new Dismissible(key: Key(snapshot.data[index].id.toString()),
+                                child: new Column(
+                              children: <Widget>[
+                                new Row(children: <Widget>[
+                                  new Expanded(
+                                    child: new ListTile(
+                                      title: new Text('City: ${snapshot.data[index].name}'),
+                                      subtitle: new Row(children: <Widget>[
+                                        new Text('Likes: ${snapshot.data[index].likeCount}'),
+                                        new SizedBox(width: 20),
+                                        new Text('Dislikes: ${snapshot.data[index].dislikeCount}')
+                                        ],
+                                      ),
+                                    ),
+                                    flex: 3,
+                                  ),
+                                  new Expanded(
+                                    child: new RawMaterialButton(
+                                        onPressed: () async {
+                                          await _service.updateCity(snapshot.data[index]..likeCount += 1);
+                                          setState(() { });
+                                        },
+                                        shape: new CircleBorder(),
+                                        elevation: 2.0,
+                                        fillColor: Colors.orange[100],
+                                        padding: const EdgeInsets.all(10.0),
+                                        child: Icon(Icons.exposure_plus_1, color: Colors.green[300])
+                                    ),
+                                    flex: 1
+                                  ),
+                                  new Expanded(
+                                      child: new RawMaterialButton(
+                                          onPressed: () async {
+                                            await _service.updateCity(snapshot.data[index]..dislikeCount += 1);
+                                            setState(() { });
+                                          },
+                                          shape: new CircleBorder(),
+                                          elevation: 2.0,
+                                          fillColor: Colors.orange[100],
+                                          padding: const EdgeInsets.all(10.0),
+                                          child: Icon(Icons.exposure_neg_1, color: Colors.red[300])
+                                      ),
+                                      flex: 1
+                                  ),
+                                  //)
+                                ]),
+                                new Divider(height: 5)
+                              ]
+                            ),
+                            onDismissed: (direction) async
+                            {
+                              await _service.deleteCity(snapshot.data[index]);
+                            },
+                            background: Container(color: Colors.red[300]),
+                          );
                           }
                       );
                     }
