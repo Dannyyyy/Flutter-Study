@@ -98,7 +98,8 @@ class JokesPageState extends State<JokesPage>
       appBar: AppBar(
         title: Text("Jokes"),
       ),
-      body: Container(child: Center(child: RefreshIndicator(child: _jokeBody(), onRefresh: _refreshAction))),
+      body: Container(child: Center(child: _jokeBody())),
+      floatingActionButton: FloatingActionButton(onPressed: _refreshAction, child: Icon(Icons.refresh),),
     );
   }
 }
