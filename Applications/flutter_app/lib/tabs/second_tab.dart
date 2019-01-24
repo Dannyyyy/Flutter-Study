@@ -40,9 +40,8 @@ class AddContactTabState extends State<AddContactTab>
 
   @override
   Widget build(BuildContext context) {
-
-    return new Scaffold(
-      body: new Center(
+    return new Container(
+      child: new Center(
         child: FutureBuilder<List<Contact>>(
           future: _getContacts(),
           builder: (BuildContext context,AsyncSnapshot<List<Contact>> snapshot) {

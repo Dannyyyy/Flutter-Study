@@ -271,8 +271,8 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
 class CameraApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: CameraExampleHome(),
+    return Container(
+      child: CameraExampleHome(),
     );
   }
 }

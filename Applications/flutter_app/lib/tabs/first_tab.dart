@@ -145,7 +145,6 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
                       eCtrl.clear();
                     }
                   },
-                  enabled: true,
                   decoration: new InputDecoration.collapsed(hintText: "Enter city name ..."),
                 ),
               ),
