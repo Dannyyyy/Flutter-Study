@@ -150,8 +150,7 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
               ),
               new Container(
                 child: new IconButton(
-                  color: Colors.red,
-                  icon: new Icon(Icons.send),
+                  icon: new Icon(Icons.check_circle, color: Colors.green),
                   onPressed: () async {
                     if (eCtrl.text != null && eCtrl.text.isNotEmpty) {
                       await _service.saveCity(new City(eCtrl.text, 0, 0));

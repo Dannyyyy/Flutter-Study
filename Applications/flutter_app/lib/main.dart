@@ -10,6 +10,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter_app/pages/scoped_page.dart';
 import 'package:flutter_app/pages/jokes_page.dart';
 import 'package:flutter_app/pages/add_contact_page.dart';
+import 'package:flutter_app/pages/auto_page.dart';
 
 List<CameraDescription> cameras = new List<CameraDescription>();
 
@@ -66,6 +67,10 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     Navigator.of(context).pushNamed('/jokes');
   }
 
+  void navAuto(BuildContext context) {
+    Navigator.of(context).pushNamed('/auto');
+  }
+
   @override
   void dispose() {
     // Dispose of the Tab Controller
@@ -107,7 +112,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                 ),
                 new Divider(),
                 new ListTile(
-                  title: new Text("Stocks"),
+                  title: new Text("Stocks(Refresh, Dismissible)"),
                   trailing: new Icon(Icons.card_travel),
                   onTap: () {
                     Navigator.of(context).pop();
@@ -121,19 +126,26 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                     navIsolate(context);
                   }),
                 new ListTile(
-                  title: new Text("Scoped"),
+                  title: new Text("Scoped Model"),
                   trailing: new Icon(Icons.card_travel),
                   onTap: () {
                     Navigator.of(context).pop();
                     navScoped(context);
                   }),
                 new ListTile(
-                  title: new Text("Jokes"),
+                  title: new Text("Jokes(Online)"),
                   trailing: new Icon(Icons.thumbs_up_down),
                   onTap: () {
                     Navigator.of(context).pop();
                     navJokes(context);
                   }),
+                new ListTile(
+                    title: new Text("Auto(Firebase)"),
+                    trailing: new Icon(Icons.directions_car),
+                    onTap: () {
+                      Navigator.of(context).pop();
+                      navAuto(context);
+                    }),
               ],
             ),
           ),
@@ -177,6 +189,7 @@ class App extends StatelessWidget
         '/scoped': (BuildContext context) => new ScopedPage(),
         '/jokes': (BuildContext context) => new JokesPage(),
         '/contact': (BuildContext context) => new ContactPage(),
+        '/auto': (BuildContext context) => new AutoPage(),
       },
     );
   }
