@@ -29,6 +29,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   TabController controller;
 
   @override
@@ -74,87 +76,87 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
   @override
   Widget build(BuildContext context) {
     return new Builder(builder: (context) =>
-          Scaffold(
-              appBar: new AppBar(
-                leading: new Icon(Icons.menu),
-                title: new Text("App"),
-                actions: <Widget>[
-                  new IconButton(
-                    icon: new Icon(Icons.info),
-                    onPressed: () => navInfo(context),
-                  ),
-                  new IconButton(
-                    icon: new Icon(Icons.settings),
-                    onPressed: () => navSettings(context)
-                  )
-                ],
+      Scaffold(
+        key: _scaffoldKey,
+          appBar: new AppBar(
+            leading: new Icon(Icons.menu),
+            title: new Text("App"),
+            actions: <Widget>[
+              new IconButton(
+                icon: new Icon(Icons.info),
+                onPressed: () => navInfo(context),
               ),
-
-              body: new TabBarView(
-                // Add tabs as widgets
-                children: <Widget>[
-                  new FirstTab(), new SecondTab(), new CameraExampleHome(cameras: cameras)],
-                // set the controller
-                controller: controller,
-              ),
-              drawer: new Drawer(
-                child: new ListView(
-                  children: [
-                    new ListTile(
-                      title: new Text("Menu"),
-                    ),
-                    new Divider(),
-                    new ListTile(
-                        title: new Text("Stocks"),
-                        trailing: new Icon(Icons.card_travel),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          navStocks(context);
-                        }),
-                    new ListTile(
-                        title: new Text("Isolate"),
-                        trailing: new Icon(Icons.filter_tilt_shift),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          navIsolate(context);
-                        }),
-                    new ListTile(
-                        title: new Text("Scoped"),
-                        trailing: new Icon(Icons.card_travel),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          navScoped(context);
-                        }),
-                    new ListTile(
-                        title: new Text("Jokes"),
-                        trailing: new Icon(Icons.thumbs_up_down),
-                        onTap: () {
-                          Navigator.of(context).pop();
-                          navJokes(context);
-                        }),
-                  ],
-                ),
-              ),
-              bottomNavigationBar: new Material(
-                // set the color of the bottom navigation bar
-                color: Colors.blue,
-                // set the tab bar as the child of bottom navigation bar
-                child: new TabBar(
-                  tabs: <Tab>[
-                    new Tab(
-                      icon: new Icon(Icons.favorite),
-                    ),
-                    new Tab(
-                      icon: new Icon(Icons.contacts),
-                    ),
-                    new Tab(
-                      icon: new Icon(Icons.photo_camera),
-                    ),
-                  ],
-                  controller: controller,
-                ),
+              new IconButton(
+                icon: new Icon(Icons.settings),
+                onPressed: () => navSettings(context)
               )
+            ],
+          ),
+          body: new TabBarView(
+            // Add tabs as widgets
+            children: <Widget>[
+              new FirstTab(_scaffoldKey), new SecondTab(), new CameraExampleHome(cameras: cameras)],
+            // set the controller
+            controller: controller,
+          ),
+          drawer: new Drawer(
+            child: new ListView(
+              children: [
+                new ListTile(
+                  title: new Text("Menu"),
+                ),
+                new Divider(),
+                new ListTile(
+                  title: new Text("Stocks"),
+                  trailing: new Icon(Icons.card_travel),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    navStocks(context);
+                  }),
+                new ListTile(
+                  title: new Text("Isolate"),
+                  trailing: new Icon(Icons.filter_tilt_shift),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    navIsolate(context);
+                  }),
+                new ListTile(
+                  title: new Text("Scoped"),
+                  trailing: new Icon(Icons.card_travel),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    navScoped(context);
+                  }),
+                new ListTile(
+                  title: new Text("Jokes"),
+                  trailing: new Icon(Icons.thumbs_up_down),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    navJokes(context);
+                  }),
+              ],
+            ),
+          ),
+          bottomNavigationBar: new Material(
+            // set the color of the bottom navigation bar
+            color: Colors.blue,
+            // set the tab bar as the child of bottom navigation bar
+            child: new TabBar(
+              tabs: <Tab>[
+                new Tab(
+                  icon: new Icon(Icons.favorite),
+                ),
+                new Tab(
+                  icon: new Icon(Icons.contacts),
+                ),
+                new Tab(
+                  icon: new Icon(Icons.photo_camera),
+                ),
+              ],
+              controller: controller,
+            ),
           )
+      )
     );
   }
 }
