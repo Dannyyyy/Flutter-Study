@@ -127,8 +127,8 @@ class _AutoPageState extends State<AutoPage>{
                       controller: eCtrl,
                       onSubmitted: (text) async {
                         if (text != null && text.isNotEmpty) {
-                          eCtrl.clear();
                           await _addCarModel(text);
+                          eCtrl.clear();
                         }
                       },
                       decoration: new InputDecoration.collapsed(hintText: "Enter car model ..."),
@@ -139,8 +139,8 @@ class _AutoPageState extends State<AutoPage>{
                       icon: new Icon(Icons.check_circle, color: Colors.green),
                       onPressed: () async {
                         if (eCtrl.text != null && eCtrl.text.isNotEmpty) {
-                          eCtrl.clear();
                           await _addCarModel(eCtrl.text);
+                          eCtrl.clear();
                         }
                       }),
                   ),

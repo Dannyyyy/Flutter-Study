@@ -132,34 +132,37 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
           ),
         ),
         Divider(),
-        new Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: new Row(
-            children: <Widget>[
-              new Flexible(
-                child: new TextField(
-                  controller: eCtrl,
-                  onSubmitted: (text) async {
-                    if (text != null && text.isNotEmpty) {
-                      await _service.saveCity(new City(text, 0, 0));
-                      eCtrl.clear();
-                    }
-                  },
-                  decoration: new InputDecoration.collapsed(hintText: "Enter city name ..."),
+        new Align(
+          child: new Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: new Row(
+              children: <Widget>[
+                new Flexible(
+                  child: new TextField(
+                    controller: eCtrl,
+                    onSubmitted: (text) async {
+                      if (text != null && text.isNotEmpty) {
+                        await _service.saveCity(new City(text, 0, 0));
+                        eCtrl.clear();
+                      }
+                    },
+                    decoration: new InputDecoration.collapsed(hintText: "Enter city name ..."),
+                  ),
                 ),
-              ),
-              new Container(
-                child: new IconButton(
-                  icon: new Icon(Icons.check_circle, color: Colors.green),
-                  onPressed: () async {
-                    if (eCtrl.text != null && eCtrl.text.isNotEmpty) {
-                      await _service.saveCity(new City(eCtrl.text, 0, 0));
-                      eCtrl.clear();
-                    }
-                  }),
-              ),
-            ],
+                new Container(
+                  child: new IconButton(
+                    icon: new Icon(Icons.check_circle, color: Colors.green),
+                    onPressed: () async {
+                      if (eCtrl.text != null && eCtrl.text.isNotEmpty) {
+                        await _service.saveCity(new City(eCtrl.text, 0, 0));
+                        eCtrl.clear();
+                      }
+                    }),
+                ),
+              ],
+            ),
           ),
+          alignment: Alignment.bottomCenter,
         )
       ]
       )

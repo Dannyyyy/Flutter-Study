@@ -117,35 +117,40 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
                   onTap: () {
                     Navigator.of(context).pop();
                     navStocks(context);
-                  }),
+                  }
+                ),
                 new ListTile(
-                  title: new Text("Isolate"),
+                  title: new Text("Dynamic Tiles(Timer)"),
                   trailing: new Icon(Icons.filter_tilt_shift),
                   onTap: () {
                     Navigator.of(context).pop();
                     navIsolate(context);
-                  }),
+                  }
+                ),
                 new ListTile(
                   title: new Text("Scoped Model"),
                   trailing: new Icon(Icons.card_travel),
                   onTap: () {
                     Navigator.of(context).pop();
                     navScoped(context);
-                  }),
+                  }
+                ),
                 new ListTile(
                   title: new Text("Jokes(Online)"),
                   trailing: new Icon(Icons.thumbs_up_down),
                   onTap: () {
                     Navigator.of(context).pop();
                     navJokes(context);
-                  }),
+                  }
+                ),
                 new ListTile(
-                    title: new Text("Auto(Firebase)"),
-                    trailing: new Icon(Icons.directions_car),
-                    onTap: () {
-                      Navigator.of(context).pop();
-                      navAuto(context);
-                    }),
+                  title: new Text("Auto(Firebase)"),
+                  trailing: new Icon(Icons.directions_car),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    navAuto(context);
+                  }
+                ),
               ],
             ),
           ),
