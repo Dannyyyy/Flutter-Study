@@ -23,12 +23,14 @@ dependencies:
   scoped_model: ^1.0.1
   english_words: ^3.1.0
   intl: ^0.15.7
-  camera: ^0.2.9+1
+  camera: ^0.3.0
   path_provider: ^0.4.1
   sqflite: ^1.0.0
   url_launcher: ^4.0.3
   flutter_slidable: ^0.4.9
-  cloud_firestore: ^0.8.2+3
+  cloud_firestore: ^0.9.0
+  firebase_auth: ^0.8.0+1
+  google_sign_in: ^3.3.0
   validator:
     git:
       url:

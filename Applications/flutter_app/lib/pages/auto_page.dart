@@ -110,7 +110,7 @@ class _AutoPageState extends State<AutoPage>{
 
     return new Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(title: new Text("Firebase"),),
+      appBar: AppBar(title: new Text("FirebaseStore Cloud"),),
       body: new Container(
         child: Column(children: <Widget> [
           Flexible(

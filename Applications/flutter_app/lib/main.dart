@@ -11,6 +11,9 @@ import 'package:flutter_app/pages/scoped_page.dart';
 import 'package:flutter_app/pages/jokes_page.dart';
 import 'package:flutter_app/pages/add_contact_page.dart';
 import 'package:flutter_app/pages/auto_page.dart';
+import 'package:flutter_app/pages/sign_up_page.dart';
+import 'package:flutter_app/pages/sign_in_page.dart';
+import 'package:flutter_app/services/auth_service.dart';
 
 List<CameraDescription> cameras = new List<CameraDescription>();
 
@@ -31,7 +34,7 @@ class HomePage extends StatefulWidget {
 class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
+  final AuthService _authService = new AuthService();
   TabController controller;
 
   @override
@@ -71,11 +74,136 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
     Navigator.of(context).pushNamed('/auto');
   }
 
+  void navSignUp(BuildContext context) {
+    Navigator.of(context).pushNamed('/sign_up');
+  }
+
+  void navSignIn(BuildContext context) {
+    Navigator.of(context).pushNamed('/sign_in');
+  }
+
+  void navSignOut(BuildContext context) {
+    Navigator.of(context).pushNamed('/sign_out');
+  }
+
   @override
   void dispose() {
-    // Dispose of the Tab Controller
     controller.dispose();
     super.dispose();
+  }
+
+  List<Widget> _buildMenu() {
+    List<Widget> widgets = new List<Widget>();
+
+    //if(_authService.isAuthorize())
+    //{
+      //widgets.add(
+      //  new ListTile(
+      //    subtitle: CircleAvatar(child: Icon(Icons.verified_user)),
+      //  )
+      //);
+    //}
+    //else
+    //{
+      widgets.add(new ListTile(title: new Text("Menu")));
+    //}
+
+    widgets.add(new Divider());
+
+    //if(_authService.isAuthorize())
+    //{
+    //  widgets.add(
+    //    new ListTile(
+    //      title: new Text("Stocks(Refresh, Dismissible)"),
+    //      trailing: new Icon(Icons.card_travel),
+    //      onTap: () {
+    //        Navigator.of(context).pop();
+    //        navStocks(context);
+    //      }
+    //    )
+    //  );
+
+      widgets.add(
+        new ListTile(
+          title: new Text("Dynamic Tiles(Timer)"),
+          trailing: new Icon(Icons.filter_tilt_shift),
+          onTap: () {
+            Navigator.of(context).pop();
+            navIsolate(context);
+          }
+        )
+      );
+
+      widgets.add(
+        new ListTile(
+          title: new Text("Scoped Model"),
+          trailing: new Icon(Icons.card_travel),
+          onTap: () {
+            Navigator.of(context).pop();
+            navScoped(context);
+          }
+        )
+      );
+
+      widgets.add(
+        new ListTile(
+          title: new Text("Jokes(Online)"),
+          trailing: new Icon(Icons.thumbs_up_down),
+          onTap: () {
+            Navigator.of(context).pop();
+            navJokes(context);
+          }
+        )
+      );
+
+      widgets.add(
+        new ListTile(
+          title: new Text("Votes(Firebase)"),
+          trailing: new Icon(Icons.directions_car),
+          onTap: () {
+            Navigator.of(context).pop();
+            navAuto(context);
+          }
+        )
+      );
+    //}
+    //else
+    //{
+      widgets.add(
+        new ListTile(
+          title: new Text("Sign Up"),
+          trailing: new Icon(Icons.arrow_upward),
+          onTap: () {
+            Navigator.of(context).pop();
+            navSignUp(context);
+          }
+        )
+      );
+
+    widgets.add(
+        new ListTile(
+            title: new Text("Sign In"),
+            trailing: new Icon(Icons.arrow_forward),
+            onTap: () {
+              Navigator.of(context).pop();
+              navSignIn(context);
+            }
+        )
+    );
+
+    widgets.add(
+        new ListTile(
+            title: new Text("Sign Out"),
+            trailing: new Icon(Icons.arrow_downward),
+            onTap: () {
+              Navigator.of(context).pop();
+              navSignOut(context);
+            }
+        )
+    );
+    //}
+
+    return widgets;
   }
 
   @override
@@ -106,52 +234,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           ),
           drawer: new Drawer(
             child: new ListView(
-              children: [
-                new ListTile(
-                  title: new Text("Menu"),
-                ),
-                new Divider(),
-                new ListTile(
-                  title: new Text("Stocks(Refresh, Dismissible)"),
-                  trailing: new Icon(Icons.card_travel),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    navStocks(context);
-                  }
-                ),
-                new ListTile(
-                  title: new Text("Dynamic Tiles(Timer)"),
-                  trailing: new Icon(Icons.filter_tilt_shift),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    navIsolate(context);
-                  }
-                ),
-                new ListTile(
-                  title: new Text("Scoped Model"),
-                  trailing: new Icon(Icons.card_travel),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    navScoped(context);
-                  }
-                ),
-                new ListTile(
-                  title: new Text("Jokes(Online)"),
-                  trailing: new Icon(Icons.thumbs_up_down),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    navJokes(context);
-                  }
-                ),
-                new ListTile(
-                  title: new Text("Auto(Firebase)"),
-                  trailing: new Icon(Icons.directions_car),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    navAuto(context);
-                  }
-                ),
-              ],
+              children: _buildMenu()
             ),
           ),
           bottomNavigationBar: new Material(
@@ -180,6 +263,8 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
 class App extends StatelessWidget
 {
+  final AuthService _authService = new AuthService();
+
   @override
   Widget build(BuildContext context) {
     return new MaterialApp(
@@ -195,6 +280,9 @@ class App extends StatelessWidget
         '/jokes': (BuildContext context) => new JokesPage(),
         '/contact': (BuildContext context) => new ContactPage(),
         '/auto': (BuildContext context) => new AutoPage(),
+        '/sign_up': (BuildContext context) => new SignUpPage(_authService),
+        '/sign_in': (BuildContext context) => new SignInPage(_authService),
+        '/sign_out': (BuildContext context) => new SignInPage(_authService),
       },
     );
   }
