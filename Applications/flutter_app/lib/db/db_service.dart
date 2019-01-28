@@ -19,8 +19,8 @@ class DBService
 
   initDb() async {
     io.Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, "test2.db");
-    var theDb = await openDatabase(path, version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    String path = join(documentsDirectory.path, "flutter_db.db");
+    var theDb = await openDatabase(path, version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
 
     return theDb;
   }
@@ -30,12 +30,14 @@ class DBService
     await db.execute(
         "CREATE TABLE Contact(id INTEGER PRIMARY KEY, name TEXT, email TEXT, phone TEXT, favoriteColor TEXT, dob TEXT)");
 
+    await db.execute(
+        "CREATE TABLE City(id INTEGER PRIMARY KEY, name TEXT, likeCount INTEGER, dislikeCount INTEGER)");
+
     print("Created tables");
   }
 
   void _onUpgrade(Database db, int oldVersion, int newVersion) async {
-    await db.execute(
-        "CREATE TABLE City(id INTEGER PRIMARY KEY, name TEXT, likeCount INTEGER, dislikeCount INTEGER)");
+
     print("Upgrade tables");
   }
 

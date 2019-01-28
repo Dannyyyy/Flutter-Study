@@ -3,14 +3,10 @@ import 'package:flutter/material.dart';
 class InfoPage extends StatefulWidget
 {
   @override
-  InfoPageState createState() => new InfoPageState();
+  createState() => new _InfoPageState();
 }
 
-void _navHome(BuildContext context) {
-  Navigator.pop(context);
-}
-
-class InfoPageState extends State<InfoPage> {
+class _InfoPageState extends State<InfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

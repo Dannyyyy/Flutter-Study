@@ -4,13 +4,12 @@ import 'package:flutter/services.dart';
 
 class SettingsPage extends StatefulWidget {
   @override
-  SettingsPageState createState() => new SettingsPageState();
+  createState() => new _SettingsPageState();
 }
 
-class SettingsPageState extends State<SettingsPage> {
+class _SettingsPageState extends State<SettingsPage> {
 
-  static const MethodChannel methodChannel =
-  MethodChannel('dannyyyy/battery_level');
+  static const MethodChannel methodChannel = MethodChannel('dannyyyy/battery_level');
   //static const EventChannel eventChannel =
   //EventChannel('samples.flutter.io/charging');
 
@@ -20,11 +19,7 @@ class SettingsPageState extends State<SettingsPage> {
   String _chargingStatus = 'Battery status: unknown.';
 
   bool _bluetooth = true;
-  bool _alarms = false;
-  bool _camera = false;
-  bool _wifi = false;
-  bool _isDelay = false;
-  bool _isSaving = false;
+  bool _alarms = false, _camera = false, _wifi = false, _isDelay = false, _isSaving = false;
 
   void _submit() {
     setState(() {

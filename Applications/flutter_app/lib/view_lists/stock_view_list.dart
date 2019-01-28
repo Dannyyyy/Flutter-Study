@@ -8,10 +8,10 @@ class StockViewList extends StatefulWidget
   final List<Stock> stocks;
 
   @override
-  StockViewListState createState() => new StockViewListState();
+  createState() => new _StockViewListState();
 }
 
-class StockViewListState extends State<StockViewList>
+class _StockViewListState extends State<StockViewList>
 {
   _removeStock(Stock stock)
   {
@@ -22,31 +22,30 @@ class StockViewListState extends State<StockViewList>
     Scaffold.of(context).removeCurrentSnackBar();
 
     Scaffold.of(context).showSnackBar(
-        SnackBar(
-          content: new Text('Removed ${stock.name}!'),
-          duration: new Duration(seconds: 3),
-          backgroundColor: Colors.red[300],
-        )
+      SnackBar(
+        content: new Text('Removed ${stock.name}!'),
+        duration: new Duration(seconds: 3),
+        backgroundColor: Colors.red[300],
+      )
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return new ListView.builder(
+      itemCount: widget.stocks.length,
+      itemBuilder: (context, index) {
+        Stock stock = widget.stocks[index];
 
-        itemCount: widget.stocks.length,
-        itemBuilder: (context, index) {
-          Stock stock = widget.stocks[index];
-
-          return Dismissible(
-            key: Key(stock.name),
-            background: Container(color: Colors.blue),
-            onDismissed: (direction) {
-              _removeStock(stock);
-            },
-            child: new ListTile(title: new Text(stock.name), subtitle: new Text('${stock.cost ?? "Cost not found"} , last update: ${stock.lastUpdateDateTime}'))
-          );
-        }
+        return Dismissible(
+          key: Key(stock.name),
+          background: Container(color: Colors.blue),
+          onDismissed: (direction) {
+            _removeStock(stock);
+          },
+          child: new ListTile(title: new Text(stock.name), subtitle: new Text('${stock.cost ?? "Cost not found"} , last update: ${stock.lastUpdateDateTime}'))
+        );
+      }
     );
   }
 }

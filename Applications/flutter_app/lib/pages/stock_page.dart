@@ -6,10 +6,10 @@ import 'package:flutter_app/services/stock_service.dart';
 class StockPage extends StatefulWidget
 {
   @override
-  StockPageState createState() => new StockPageState();
+  createState() => new _StockPageState();
 }
 
-class StockPageState extends State<StockPage>
+class _StockPageState extends State<StockPage>
 {
   String _stockName;
   List<Stock> _stocks = new List<Stock>();
@@ -39,22 +39,23 @@ class StockPageState extends State<StockPage>
             },
           ),
           actions: <Widget>[
-            new FlatButton(onPressed: () async {
-                  if(_stockName.isNotEmpty)
-                  {
-                    double cost = await _service.getStockCost(_stockName);
-                    setState(() {
-                      _stocks.add(new Stock(_stockName, cost, new DateTime.now()));
-                    });
-                  }
-                  _stockName = "";
-                  Navigator.pop(context);
-                },
-                child: new Text("Ok")
+            new FlatButton(
+              onPressed: () async {
+                if(_stockName.isNotEmpty)
+                {
+                  double cost = await _service.getStockCost(_stockName);
+                  setState(() {
+                    _stocks.add(new Stock(_stockName, cost, new DateTime.now()));
+                  });
+                }
+                _stockName = "";
+                Navigator.pop(context);
+              },
+              child: new Text("Ok")
             ),
             new FlatButton(
-                onPressed: () => Navigator.pop(context),
-                child: new Text("Cancel")
+              onPressed: () => Navigator.pop(context),
+              child: new Text("Cancel")
             )
           ],
         );

@@ -11,14 +11,13 @@ const httpHeaders = const {
 };
 
 class JokesPage extends StatefulWidget {
-
   JokesPage({Key key}) : super(key: key);
 
   @override
-  JokesPageState createState() => JokesPageState();
+  createState() => _JokesPageState();
 }
 
-class JokesPageState extends State<JokesPage>
+class _JokesPageState extends State<JokesPage>
 {
   Future<http.Response> _jokeResponse;
 

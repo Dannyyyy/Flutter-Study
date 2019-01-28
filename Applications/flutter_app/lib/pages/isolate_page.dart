@@ -10,10 +10,10 @@ class IsolatePageListView extends StatefulWidget {
   final List<IsolateTile> tiles;
 
   @override
-  IsolatePageListViewState createState() => IsolatePageListViewState();
+  createState() => _IsolatePageListViewState();
 }
 
-class IsolatePageListViewState extends State<IsolatePageListView> {
+class _IsolatePageListViewState extends State<IsolatePageListView> {
 
   @override
   Widget build(BuildContext context) {

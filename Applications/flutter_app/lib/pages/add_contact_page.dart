@@ -11,7 +11,7 @@ class ContactPage extends StatefulWidget {
   final String title;
 
   @override
-  _ContactPageState createState() => new _ContactPageState();
+  createState() => new _ContactPageState();
 }
 
 class _ContactPageState extends State<ContactPage> {

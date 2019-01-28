@@ -9,13 +9,13 @@ class DynamicListView extends StatefulWidget {
   DynamicListView(this._scaffoldKey);
 
   @override
-  createState() => new DynamicListViewState();
+  createState() => new _DynamicListViewState();
 }
 
-class DynamicListViewState extends State<DynamicListView> with SingleTickerProviderStateMixin {
+class _DynamicListViewState extends State<DynamicListView> with SingleTickerProviderStateMixin {
 
   final TextEditingController eCtrl = new TextEditingController();
-  DBService _service;
+  final DBService _service = new DBService();
 
   Future<List<City>> _getCities() async
   {
@@ -23,17 +23,10 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
   }
 
   @override
-  void initState() {
-    _service = new DBService();
-    print(widget._scaffoldKey);
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return new Container(
       child: new Column(
-        children: <Widget>[ Flexible(
+        children: <Widget>[ new Flexible(
           child: FutureBuilder<List<City>>(
             future: _getCities(),
             builder: (BuildContext context, AsyncSnapshot<List<City>> snapshot) {
@@ -93,7 +86,6 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
                               ),
                               flex: 1
                             ),
-                            //)
                           ]),
                           new Divider(height: 5)
                         ]
@@ -122,7 +114,7 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
                 );
               }
               else if (snapshot.data == null) {
-                return new Text("No Data found");
+                return new Center(child: new Text("No Data found"));
               }
               return new Container(
                 alignment: AlignmentDirectional.center,
@@ -132,39 +124,39 @@ class DynamicListViewState extends State<DynamicListView> with SingleTickerProvi
           ),
         ),
         Divider(),
-        new Align(
-          child: new Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: new Row(
-              children: <Widget>[
-                new Flexible(
-                  child: new TextField(
-                    controller: eCtrl,
-                    onSubmitted: (text) async {
-                      if (text != null && text.isNotEmpty) {
-                        await _service.saveCity(new City(text, 0, 0));
-                        eCtrl.clear();
-                      }
-                    },
-                    decoration: new InputDecoration.collapsed(hintText: "Enter city name ..."),
-                  ),
+        new Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: new Row(
+            children: <Widget>[
+              new Flexible(
+                child: new TextField(
+                  controller: eCtrl,
+                  onSubmitted: (text) async {
+                    if (text != null && text.isNotEmpty) {
+                      String inputText = text;
+                      eCtrl.clear();
+                      await _service.saveCity(new City(inputText, 0, 0));
+                    }
+                  },
+                  decoration: new InputDecoration.collapsed(hintText: "Enter city name ..."),
                 ),
-                new Container(
-                  child: new IconButton(
-                    icon: new Icon(Icons.check_circle, color: Colors.green),
-                    onPressed: () async {
-                      if (eCtrl.text != null && eCtrl.text.isNotEmpty) {
-                        await _service.saveCity(new City(eCtrl.text, 0, 0));
-                        eCtrl.clear();
-                      }
-                    }),
-                ),
-              ],
-            ),
+              ),
+              new Container(
+                child: new IconButton(
+                  icon: new Icon(Icons.check_circle, color: Colors.green),
+                  onPressed: () async {
+                    if (eCtrl.text != null && eCtrl.text.isNotEmpty) {
+                      String inputText = eCtrl.text;
+                      eCtrl.clear();
+                      await _service.saveCity(new City(inputText, 0, 0));
+                    }
+                  }),
+              ),
+            ],
           ),
-          alignment: Alignment.bottomCenter,
-        )
-      ]
+        ),
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
       )
     );
   }

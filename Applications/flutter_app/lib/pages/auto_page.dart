@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AutoPage extends StatefulWidget{
   @override
-  _AutoPageState createState() => new _AutoPageState();
+  createState() => new _AutoPageState();
 }
 
 class _AutoPageState extends State<AutoPage>{
@@ -20,7 +20,7 @@ class _AutoPageState extends State<AutoPage>{
       stream: Firestore.instance.collection(collectionsName).snapshots(),
       builder: (context, snapshot) {
         if (!snapshot.hasData)
-          return LinearProgressIndicator();
+          return new Center(child: LinearProgressIndicator());
         return _buildList(context, snapshot.data.documents);
       },
     );
@@ -107,7 +107,7 @@ class _AutoPageState extends State<AutoPage>{
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
+
     return new Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(title: new Text("Firebase"),),
@@ -151,8 +151,10 @@ class _AutoPageState extends State<AutoPage>{
             ),
             alignment: Alignment.bottomCenter,
           )
-        ]),
-        )
+        ],
+        mainAxisAlignment: MainAxisAlignment.end,
+        ),
+      )
     );
   }
 }

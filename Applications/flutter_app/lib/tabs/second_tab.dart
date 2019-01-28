@@ -7,23 +7,16 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 class AddContactTab extends StatefulWidget
 {
   @override
-  AddContactTabState createState() => new AddContactTabState();
+  _AddContactTabState createState() => new _AddContactTabState();
 }
 
-class AddContactTabState extends State<AddContactTab>
+class _AddContactTabState extends State<AddContactTab>
 {
-  DBService _service;
+  final DBService _service = new DBService();
 
   Future<List<Contact>> _getContacts() async
   {
     return await _service.getContacts();
-  }
-
-  @override
-  initState()
-  {
-    _service = new DBService();
-    super.initState();
   }
 
   Color _getColor(String color)
