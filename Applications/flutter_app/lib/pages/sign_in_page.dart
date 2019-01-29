@@ -1,32 +1,32 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:validator/validator.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
-import 'package:flutter_app/services/auth_service.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_app/redux/actions/auth_actions.dart';
+import 'package:flutter_app/redux/app_state.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_app/models/authorization.dart';
 
 class SignInPage extends StatefulWidget {
-  final AuthService _authService;
-
-  SignInPage(this._authService);
-
   @override
-  createState() => new _SignInPageState(this._authService);
+  createState() => new _SignInPageState();
 }
 
 class _SignInPageState extends State<SignInPage>
 {
-  FirebaseUser user = null;
-  final AuthService _authService;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
-  bool _isDelay = false;
+  Timer _timer;
+  bool _onlyOnceShowError = true;
 
   SignInModel model = new SignInModel();
   String _password = '';
-  _SignInPageState(this._authService);
+
+  @override
+  dispose(){
+    _timer?.cancel();
+    super.dispose();
+  }
 
   String isPassword(String password) {
     if (!password.isEmpty)
@@ -54,33 +54,22 @@ class _SignInPageState extends State<SignInPage>
     );
   }
 
-  void _submit() {
-    setState(() {
-      _isDelay = true;
-    });
-
-    new Future.delayed(new Duration(seconds: 4), () {
-      Navigator.of(context).pop();
-    });
-  }
-
-  void _submitForm() {
+  void _submitForm(SignInStore _model) {
     final FormState form = _formKey.currentState;
-
+    FocusScope.of(context).requestFocus(new FocusNode());
     if (!form.validate()) {
       showMessage('Form is not valid!  Please review and correct.');
     } else {
       form.save();
-      _authService.signIn(model.email, model.password)
-        .then((value) =>
-          _submit()
-        )
-        .catchError((_) => showMessage('Error!'));
+      _onlyOnceShowError = true;
+      _model.onPressedCallback(model.email, model.password);
     }
   }
 
   Widget _buildModalBarrier()
   {
+    _timer = Timer(Duration(seconds: 2), () => Navigator.of(context).pop());
+
     return new Stack(
       children: [
         new Opacity(
@@ -101,8 +90,19 @@ class _SignInPageState extends State<SignInPage>
     );
   }
 
-  Widget _buildForm()
+  Future<bool>_goAway(SignInStore _model) {
+    _model.goAway();
+    return Future<bool>.value(true);
+  }
+
+  Widget _buildForm(SignInStore _model)
   {
+    if((_model.auth?.isError ?? false) && _onlyOnceShowError)
+    {
+      _onlyOnceShowError = false;
+      showMessage(_model.auth.error);
+    }
+
     return new Form(
         key: _formKey,
         autovalidate: true,
@@ -135,7 +135,7 @@ class _SignInPageState extends State<SignInPage>
                 padding: const EdgeInsets.only(left: 40.0, top: 20.0),
                 child: new RaisedButton(
                   child: const Text('Submit'),
-                  onPressed: _submitForm,
+                  onPressed: () => _submitForm(_model),
                 )),
           ],
         )
@@ -144,16 +144,46 @@ class _SignInPageState extends State<SignInPage>
 
   @override
   Widget build(BuildContext context) {
-    AuthService _authService = widget._authService;
+    return new StoreConnector<AppState, SignInStore>(
+      converter: SignInStore.fromStore,
+      builder: (BuildContext context, SignInStore model)
+      {
+        return new WillPopScope(
+          onWillPop: () => _goAway(model),
+          child: new Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(title: Text("Sign in")),
+            body: new SafeArea(
+                top: false,
+                bottom: false,
+                child: model.auth?.user != null ? _buildModalBarrier() : _buildForm(model)
+            ),
+          )
+        );
+      }
+    );
+  }
+}
 
-    return new Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(title: Text("Sign in")),
-      body: new SafeArea(
-        top: false,
-        bottom: false,
-        child: _isDelay ? _buildModalBarrier() : _buildForm()
-      ),
+class SignInStore {
+  final Function goAway;
+  final Function onPressedCallback;
+  final Auth auth;
+
+  SignInStore({this.onPressedCallback, this.goAway, this.auth});
+
+  static SignInStore fromStore(Store<AppState> store) {
+
+    print(store.state);
+
+    return new SignInStore(
+      onPressedCallback: (String email, String password) {
+        store.dispatch(SignIn(email, password));
+      },
+      goAway: () {
+        store.dispatch(SignInPageAway());
+      },
+      auth: store.state.auth
     );
   }
 }
