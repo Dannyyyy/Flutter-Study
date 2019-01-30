@@ -17,8 +17,7 @@ class _DynamicListViewState extends State<DynamicListView> with SingleTickerProv
   final TextEditingController eCtrl = new TextEditingController();
   final DBService _service = new DBService();
 
-  Future<List<City>> _getCities() async
-  {
+  Future<List<City>> _getCities() async {
     return await _service.getCities();
   }
 
@@ -150,7 +149,8 @@ class _DynamicListViewState extends State<DynamicListView> with SingleTickerProv
                       eCtrl.clear();
                       await _service.saveCity(new City(inputText, 0, 0));
                     }
-                  }),
+                  }
+                ),
               ),
             ],
           ),

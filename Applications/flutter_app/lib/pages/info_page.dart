@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-class InfoPage extends StatefulWidget
-{
+class InfoPage extends StatefulWidget {
   @override
   createState() => new _InfoPageState();
 }

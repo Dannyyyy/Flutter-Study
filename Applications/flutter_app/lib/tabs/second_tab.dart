@@ -4,25 +4,20 @@ import 'package:flutter_app/db/db_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
-class AddContactTab extends StatefulWidget
-{
+class AddContactTab extends StatefulWidget {
   @override
   _AddContactTabState createState() => new _AddContactTabState();
 }
 
-class _AddContactTabState extends State<AddContactTab>
-{
+class _AddContactTabState extends State<AddContactTab> {
   final DBService _service = new DBService();
 
-  Future<List<Contact>> _getContacts() async
-  {
+  Future<List<Contact>> _getContacts() async {
     return await _service.getContacts();
   }
 
-  Color _getColor(String color)
-  {
-    switch(color)
-    {
+  Color _getColor(String color) {
+    switch(color) {
       case 'green': return Colors.green[100];
       case 'red': return Colors.red[100];
       case 'blue': return Colors.blue[100];

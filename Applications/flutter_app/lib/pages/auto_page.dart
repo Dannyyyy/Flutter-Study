@@ -3,19 +3,18 @@ import 'package:flutter_app/models/record.dart';
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AutoPage extends StatefulWidget{
+class AutoPage extends StatefulWidget {
   @override
   createState() => new _AutoPageState();
 }
 
-class _AutoPageState extends State<AutoPage>{
+class _AutoPageState extends State<AutoPage> {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final TextEditingController eCtrl = new TextEditingController();
   final String collectionsName = "cars";
 
-  Widget _buildBody(BuildContext context)
-  {
+  Widget _buildBody(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
       stream: Firestore.instance.collection(collectionsName).snapshots(),
       builder: (context, snapshot) {
@@ -26,16 +25,14 @@ class _AutoPageState extends State<AutoPage>{
     );
   }
 
-  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot)
-  {
+  Widget _buildList(BuildContext context, List<DocumentSnapshot> snapshot) {
     return ListView(
       padding: EdgeInsets.only(top: 10),
       children: snapshot.map((data) => _buildListItem(context, data)).toList(),
     );
   }
 
-  Widget _buildListItem(BuildContext context, DocumentSnapshot data)
-  {
+  Widget _buildListItem(BuildContext context, DocumentSnapshot data) {
     final record = Record.fromSnapshot(data);
 
     return Container(child:
@@ -107,7 +104,6 @@ class _AutoPageState extends State<AutoPage>{
 
   @override
   Widget build(BuildContext context) {
-
     return new Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(title: new Text("FirebaseStore Cloud"),),

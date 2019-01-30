@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Record {
-
   final String name;
   final int votes;
   final DocumentReference reference;

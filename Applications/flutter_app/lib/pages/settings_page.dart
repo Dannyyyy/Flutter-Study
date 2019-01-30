@@ -64,7 +64,6 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<bool> _canLeave(BuildContext context) {
-
     if(_isSaving)
       return new Future<bool>.value(true);
 
@@ -155,7 +154,8 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
 
             child: Column(children: <Widget>[
-                new Row(children: <Widget>[
+              new Row(
+                children: <Widget>[
                   new Text('${_batteryLevel}'),
                   new SizedBox(width: 10,),
                   new SizedBox(child:
@@ -171,9 +171,10 @@ class _SettingsPageState extends State<SettingsPage> {
                     height: 40,
                   )
                 ],
-                  mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
               ),
-                new Row(children: <Widget>[
+              new Row(
+                children: <Widget>[
                   new Text('${_model}'),
                   new SizedBox(width: 10,),
                   new SizedBox(child:
@@ -189,8 +190,8 @@ class _SettingsPageState extends State<SettingsPage> {
                     height: 40,
                   )
                 ],
-                  mainAxisAlignment: MainAxisAlignment.center,
-                )
+                mainAxisAlignment: MainAxisAlignment.center,
+              )
             ],
             ),
           ),

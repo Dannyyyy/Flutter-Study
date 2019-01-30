@@ -14,7 +14,6 @@ class IsolatePageListView extends StatefulWidget {
 }
 
 class _IsolatePageListViewState extends State<IsolatePageListView> {
-
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
@@ -24,8 +23,9 @@ class _IsolatePageListViewState extends State<IsolatePageListView> {
             controller: widget.scrollController,
             itemCount: widget.tiles.length,
             itemBuilder: (context, index) {
-              return new Container(child:
-                    new Column(children: <Widget>[
+              return new Container(
+                child: new Column(
+                  children: <Widget>[
                     new ListTile(title: new Text(widget.tiles[index].word)),
                     new Divider(height: 5)
                   ]
@@ -62,8 +62,7 @@ class IsolatePageState extends State<IsolatePage> {
       setState(() {
         tiles.add(new IsolateTile(word, color));
       });
-      if(_scroll)
-      {
+      if(_scroll) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           curve: Curves.easeOut,

@@ -3,31 +3,27 @@ import 'package:flutter_app/view_lists/stock_view_list.dart';
 import 'package:flutter_app/models/stock.dart';
 import 'package:flutter_app/services/stock_service.dart';
 
-class StockPage extends StatefulWidget
-{
+class StockPage extends StatefulWidget {
   @override
   createState() => new _StockPageState();
 }
 
-class _StockPageState extends State<StockPage>
-{
+class _StockPageState extends State<StockPage> {
   String _stockName;
   List<Stock> _stocks = new List<Stock>();
   StockService _service = new StockService();
 
-  Future<void> _refreshStocks() async
-  {
+  Future<void> _refreshStocks() async {
     _stocks.forEach((s) async {
-        double cost = await _service.getStockCost(s.name);
-        setState(() {
-          s.cost = cost;
-          s.lastUpdateDateTime = DateTime.now();
-        });
+      double cost = await _service.getStockCost(s.name);
+      setState(() {
+        s.cost = cost;
+        s.lastUpdateDateTime = DateTime.now();
+      });
     });
   }
   
-  Future<void> _inputStock() async
-  {
+  Future<void> _inputStock() async {
     await showDialog<String>(
       context: context,
       builder: (BuildContext context) {

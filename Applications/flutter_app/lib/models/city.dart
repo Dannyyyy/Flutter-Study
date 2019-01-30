@@ -1,5 +1,4 @@
-class City
-{
+class City {
   int id;
   String name;
   int likeCount;

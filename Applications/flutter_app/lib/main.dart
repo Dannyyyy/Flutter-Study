@@ -30,8 +30,7 @@ Future<void> main() async {
   runApp(App());
 }
 
-class App extends StatelessWidget
-{
+class App extends StatelessWidget {
   final store = new Store<AppState>(
     appReducer,
     initialState: new AppState(),

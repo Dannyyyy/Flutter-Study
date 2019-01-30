@@ -6,8 +6,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:flutter_app/models/contact.dart';
 import 'package:flutter_app/models/city.dart';
 
-class DBService
-{
+class DBService {
   static Database _db;
 
   Future<Database> get db async {
@@ -26,12 +25,13 @@ class DBService
   }
 
   void _onCreate(Database db, int version) async {
-    // When creating the db, create the table
     await db.execute(
-        "CREATE TABLE Contact(id INTEGER PRIMARY KEY, name TEXT, email TEXT, phone TEXT, favoriteColor TEXT, dob TEXT)");
+     "CREATE TABLE Contact(id INTEGER PRIMARY KEY, name TEXT, email TEXT, phone TEXT, favoriteColor TEXT, dob TEXT)"
+    );
 
     await db.execute(
-        "CREATE TABLE City(id INTEGER PRIMARY KEY, name TEXT, likeCount INTEGER, dislikeCount INTEGER)");
+     "CREATE TABLE City(id INTEGER PRIMARY KEY, name TEXT, likeCount INTEGER, dislikeCount INTEGER)"
+    );
 
     print("Created tables");
   }
@@ -86,7 +86,7 @@ class DBService
     });
   }
 
-  void deleteCity(City city)  async {
+  void deleteCity(City city) async {
     var dbClient = await db;
     await dbClient.transaction((txn) async {
       return await txn.rawInsert(

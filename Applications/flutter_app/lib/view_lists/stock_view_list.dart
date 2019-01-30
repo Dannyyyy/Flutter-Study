@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/models/stock.dart';
 
-class StockViewList extends StatefulWidget
-{
+class StockViewList extends StatefulWidget {
   StockViewList({Key key, this.stocks}) : super(key: key);
 
   final List<Stock> stocks;
@@ -11,10 +10,8 @@ class StockViewList extends StatefulWidget
   createState() => new _StockViewListState();
 }
 
-class _StockViewListState extends State<StockViewList>
-{
-  _removeStock(Stock stock)
-  {
+class _StockViewListState extends State<StockViewList> {
+  _removeStock(Stock stock) {
     setState(() {
       this.widget.stocks.remove(stock);
     });

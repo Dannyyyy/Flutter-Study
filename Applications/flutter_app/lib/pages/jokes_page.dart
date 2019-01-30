@@ -17,8 +17,7 @@ class JokesPage extends StatefulWidget {
   createState() => _JokesPageState();
 }
 
-class _JokesPageState extends State<JokesPage>
-{
+class _JokesPageState extends State<JokesPage> {
   Future<http.Response> _jokeResponse;
 
   @override
@@ -59,26 +58,27 @@ class _JokesPageState extends State<JokesPage>
               final decoded = json.decode(snapshot.data.body);
               if (decoded['status'] == 200) {
                 return Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Dismissible(
-                      key: const Key("joke"),
-                      direction: DismissDirection.horizontal,
-                      onDismissed: (direction) {
-                        _refreshAction();
-                      },
-                      child: Container(
-                        child: Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: AutoSizeText(decoded['joke'])
+                  padding: const EdgeInsets.all(10),
+                  child: Dismissible(
+                    key: const Key("joke"),
+                    direction: DismissDirection.horizontal,
+                    onDismissed: (direction) {
+                      _refreshAction();
+                    },
+                    child: Container(
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: AutoSizeText(decoded['joke'])
+                      ),
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.black12,
+                          width: 3.0,
                         ),
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.black12,
-                            width: 3.0,
-                          ),
-                        ),
-                      )
-                    ));
+                      ),
+                    )
+                  )
+                );
               } else {
                 return ListTile(
                   leading: const Icon(Icons.sync_problem),

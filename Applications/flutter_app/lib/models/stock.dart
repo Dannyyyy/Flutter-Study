@@ -1,5 +1,4 @@
-class Stock
-{
+class Stock {
   String name;
   double cost;
   DateTime lastUpdateDateTime;
