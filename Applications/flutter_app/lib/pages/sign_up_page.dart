@@ -2,61 +2,69 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:flutter_app/services/auth_service.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_app/redux/actions/auth_actions.dart';
+import 'package:flutter_app/redux/app_state.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_app/redux/models/authorization.dart';
 
 class SignUpPage extends StatefulWidget {
-  final AuthService _authService;
-
-  SignUpPage(this._authService);
-
   @override
-  createState() => new _SignUpPageState(this._authService);
+  createState() => new _SignUpPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage>
-{
-  FirebaseUser user = null;
-  final AuthService _authService;
+class _SignUpPageState extends State<SignUpPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormFieldState<String>> _emailKey = new GlobalKey<FormFieldState<String>>();
+  final GlobalKey<FormFieldState<String>> _passwordKey = new GlobalKey<FormFieldState<String>>();
+  final GlobalKey<FormFieldState<String>> _repeatPasswordKey = new GlobalKey<FormFieldState<String>>();
 
-  bool _isDelay = false;
+  Timer _timer;
 
-  SignUpModel model = new SignUpModel();
-  String _password = '';
-  _SignUpPageState(this._authService);
+  bool visiblePassword = false;
+  bool visibleRepeatPassword = false;
+
+  @override
+  dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  Future<bool> _leavePage(SignUpStore _store) {
+    if(_store.auth?.isError ?? false) {
+      _store.onErrorShowCallback();
+    }
+
+    return Future<bool>.value(true);
+  }
 
   String isPassword(String password) {
-    if (!password.isEmpty)
-    {
-      if(password.length < 6)
-      {
+    if (!password.isEmpty) {
+      if(password.length < 6) {
         return "At least 6 characters";
       }
 
-      _password = password;
       return null;
     }
-    _password = '';
+
     return "Required password";
   }
 
   String isRepeatPassword(String password) {
-    if (!password.isEmpty)
-    {
-      if(password.length < 6)
-      {
+    if (!password.isEmpty) {
+      if(password.length < 6) {
         return "At least 6 characters";
       }
 
-      if(password == _password)
-      {
+      String _password = _passwordKey.currentState.value;
+
+      if(_password != null &&_password.isNotEmpty && password == _password) {
         return null;
       }
       return "Password don\'t match";
     }
 
-    _password = '';
     return "Required password";
   }
 
@@ -71,33 +79,24 @@ class _SignUpPageState extends State<SignUpPage>
     );
   }
 
-  void _submit() {
-    setState(() {
-      _isDelay = true;
-    });
-
-    new Future.delayed(new Duration(seconds: 4), () {
-      Navigator.of(context).pop();
-    });
-  }
-
-  void _submitForm() {
+  void _submitForm(SignUpStore _model) {
     final FormState form = _formKey.currentState;
+
+    FocusScope.of(context).requestFocus(new FocusNode());
 
     if (!form.validate()) {
       showMessage('Form is not valid!  Please review and correct.');
-    } else {
-      form.save(); //This invokes each onSaved event
-      _authService.signUp(model.email, model.password)
-        .then((value) =>
-          _submit()
-        )
-        .catchError((_) => showMessage('Error!'));
+    }
+    else {
+      final FormFieldState<String> passwordField = _passwordKey.currentState;
+      final FormFieldState<String> emailField = _emailKey.currentState;
+      _model.onSignInPressedCallback(emailField.value, passwordField.value);
     }
   }
 
-  Widget _buildModalBarrier()
-  {
+  Widget _buildModalBarrier() {
+    _timer = Timer(Duration(seconds: 2), () => Navigator.of(context).pop());
+
     return new Stack(
       children: [
         new Opacity(
@@ -118,76 +117,118 @@ class _SignUpPageState extends State<SignUpPage>
     );
   }
 
-  Widget _buildForm()
-  {
+  Widget _buildForm(SignUpStore store) {
+    if(store.auth?.isError ?? false) {
+      store.onErrorShowCallback();
+      showMessage(store.auth.error);
+    }
+
     return new Form(
-        key: _formKey,
-        autovalidate: true,
-        child: new ListView(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          children: <Widget>[
-            new TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.email),
-                hintText: 'Enter your email',
-                labelText: 'Email',
-              ),
-              keyboardType: TextInputType.emailAddress,
-              inputFormatters: [new LengthLimitingTextInputFormatter(30)],
-              validator: (val) => val.isEmpty ? 'Email is required' : null,
-              onSaved: (val) => model.email = val,
+      key: _formKey,
+      autovalidate: true,
+      child: new ListView(
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        children: <Widget>[
+          new TextFormField(
+            decoration: const InputDecoration(
+              icon: const Icon(Icons.email),
+              hintText: 'Enter your email',
+              labelText: 'Email',
             ),
-            new TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.apps),
-                hintText: 'Enter a password',
-                labelText: 'Password',
+            keyboardType: TextInputType.emailAddress,
+            inputFormatters: [new LengthLimitingTextInputFormatter(30)],
+            validator: (val) => val.isEmpty ? 'Email is required' : null,
+            key: _emailKey
+          ),
+          new TextFormField(
+            decoration: InputDecoration(
+              suffixIcon: new IconButton(
+                icon: new Icon(visiblePassword ?  Icons.visibility : Icons.visibility_off),
+                onPressed:() {
+                  setState(() {
+                    visiblePassword = !visiblePassword;
+                  });
+                }
               ),
-              keyboardType: TextInputType.text,
-              inputFormatters: [new LengthLimitingTextInputFormatter(10)],
-              validator: (val) => isPassword(val),
-              onSaved: (val) => model.password = val,
+              icon: const Icon(Icons.apps),
+              hintText: 'Enter a password',
+              labelText: 'Password',
             ),
-            new TextFormField(
-              decoration: const InputDecoration(
-                icon: const Icon(Icons.apps),
-                hintText: 'Enter a password',
-                labelText: 'Password',
+            keyboardType: TextInputType.text,
+            inputFormatters: [new LengthLimitingTextInputFormatter(10)],
+            validator: (val) => isPassword(val),
+            key: _passwordKey,
+            obscureText: visiblePassword ? false : true,
+          ),
+          new TextFormField(
+            decoration: InputDecoration(
+              suffixIcon: new IconButton(
+                icon: new Icon(visibleRepeatPassword ?  Icons.visibility : Icons.visibility_off),
+                onPressed:() {
+                  setState(() {
+                    visibleRepeatPassword = !visibleRepeatPassword;
+                  });
+                }
               ),
-              keyboardType: TextInputType.text,
-              inputFormatters: [new LengthLimitingTextInputFormatter(10)],
-              validator: (val) => isRepeatPassword(val),
-              onSaved: (val) => model.repeatPassword = val,
+              icon: const Icon(Icons.apps),
+              hintText: 'Enter a password',
+              labelText: 'Password',
             ),
-            new Container(
-                padding: const EdgeInsets.only(left: 40.0, top: 20.0),
-                child: new RaisedButton(
-                  child: const Text('Submit'),
-                  onPressed: _submitForm,
-                )),
-          ],
-        )
+            keyboardType: TextInputType.text,
+            inputFormatters: [new LengthLimitingTextInputFormatter(10)],
+            validator: (val) => isRepeatPassword(val),
+            key: _repeatPasswordKey,
+            obscureText: visibleRepeatPassword ? false : true,
+          ),
+          new Container(
+            padding: const EdgeInsets.only(left: 40.0, top: 20.0),
+            child: new RaisedButton(
+              child: const Text('Sign Up'),
+              onPressed: () => _submitForm(store),
+            )),
+        ],
+      )
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    AuthService _authService = widget._authService;
-
-    return new Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(title: Text("Sign up")),
-      body: new SafeArea(
-        top: false,
-        bottom: false,
-        child: _isDelay ? _buildModalBarrier() : _buildForm()
-      ),
+    return new StoreConnector<AppState, SignUpStore>(
+      converter: SignUpStore.fromStore,
+      builder: (BuildContext context, SignUpStore store) {
+        return new WillPopScope(
+          onWillPop: () => _leavePage(store),
+          child: new Scaffold(
+            key: _scaffoldKey,
+            appBar: AppBar(title: Text("Sign up")),
+            body: new SafeArea(
+              top: false,
+              bottom: false,
+              child: store.auth?.user != null ? _buildModalBarrier() : _buildForm(store)
+            ),
+          )
+        );
+      }
     );
   }
 }
 
-class SignUpModel {
-  String email;
-  String password;
-  String repeatPassword;
+class SignUpStore {
+  final Function onErrorShowCallback;
+  final Function onSignInPressedCallback;
+  final Auth auth;
+
+  SignUpStore({this.onSignInPressedCallback, this.onErrorShowCallback, this.auth});
+
+  static SignUpStore fromStore(Store<AppState> store) {
+    return new SignUpStore(
+      onSignInPressedCallback: (String email, String password) {
+        store.dispatch(SignUp(email, password));
+      },
+      onErrorShowCallback: () {
+        store.dispatch(AuthErrorShow());
+      },
+      auth: store.state.auth
+    );
+  }
 }

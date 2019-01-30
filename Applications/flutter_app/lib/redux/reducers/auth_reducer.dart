@@ -5,6 +5,8 @@ import 'package:flutter_app/redux/models/authorization.dart';
 final authReducer = combineReducers<Auth>([
   new TypedReducer<Auth, SignInSuccessful>(_anyAction),
   new TypedReducer<Auth, SignInFail>(_anyAction),
+  new TypedReducer<Auth, SignUpSuccessful>(_anyAction),
+  new TypedReducer<Auth, SignUpFail>(_anyAction),
   new TypedReducer<Auth, AuthErrorShowSuccessful>(_anyAction),
   new TypedReducer<Auth, LogOut>(_anyAction),
 ]);

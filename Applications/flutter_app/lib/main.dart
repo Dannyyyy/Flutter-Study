@@ -12,7 +12,6 @@ import 'package:flutter_app/pages/add_contact_page.dart';
 import 'package:flutter_app/pages/auto_page.dart';
 import 'package:flutter_app/pages/sign_up_page.dart';
 import 'package:flutter_app/pages/sign_in_page.dart';
-import 'package:flutter_app/services/auth_service.dart';
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_app/redux/app_state.dart';
@@ -33,8 +32,6 @@ Future<void> main() async {
 
 class App extends StatelessWidget
 {
-  final AuthService _authService = new AuthService();
-
   final store = new Store<AppState>(
     appReducer,
     initialState: new AppState(),
@@ -60,7 +57,7 @@ class App extends StatelessWidget
           '/jokes': (BuildContext context) => new JokesPage(),
           '/contact': (BuildContext context) => new ContactPage(),
           '/auto': (BuildContext context) => new AutoPage(),
-          '/sign_up': (BuildContext context) => new SignUpPage(_authService),
+          '/sign_up': (BuildContext context) => new SignUpPage(),
           '/sign_in': (BuildContext context) => new SignInPage(),
           '/sign_out': (BuildContext context) => new SignInPage(),
         },

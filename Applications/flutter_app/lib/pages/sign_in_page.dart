@@ -89,7 +89,7 @@ class _SignInPageState extends State<SignInPage> {
   }
 
   Future<bool> _leavePage(SignInStore _store) {
-    if(_store.auth.isError) {
+    if(_store.auth?.isError ?? false) {
       _store.onErrorShowCallback();
     }
 
@@ -182,9 +182,4 @@ class SignInStore {
       auth: store.state.auth
     );
   }
-}
-
-class SignInModel {
-  String email;
-  String password;
 }

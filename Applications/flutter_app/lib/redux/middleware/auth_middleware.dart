@@ -7,12 +7,13 @@ import 'package:flutter_app/redux/models/authorization.dart';
 List<Middleware<AppState>> createAuthMiddlewares() {
   final signIn = _createSignInMiddleware();
   final logOut = _createLogOutMiddleware();
-
+  final signUp = _createSignUpMiddleware();
   final authErrorShow = _createAuthErrorShowMiddleware();
 
   List<Middleware<AppState>> _middlewares = new List<Middleware<AppState>>();
 
   _middlewares.add(new TypedMiddleware<AppState, SignIn>(signIn));
+  _middlewares.add(new TypedMiddleware<AppState, SignUp>(signUp));
   _middlewares.add(new TypedMiddleware<AppState, LogOut>(logOut));
   _middlewares.add(new TypedMiddleware<AppState, AuthErrorShow>(authErrorShow));
 
@@ -29,6 +30,22 @@ Middleware<AppState> _createSignInMiddleware() {
       }
       catch(error) {
         store.dispatch(SignInFail(auth: new Auth()..error = error.toString()));
+      }
+    }
+    next(action);
+  };
+}
+
+Middleware<AppState> _createSignUpMiddleware() {
+  return (Store store, action, NextDispatcher next) async {
+    if (action is SignUp) {
+      try {
+        FirebaseUser user = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: action.email, password: action.password);
+        store.dispatch(SignUpSuccessful(auth: new Auth()..user = user));
+      }
+      catch(error) {
+        store.dispatch(SignUpFail(auth: new Auth()..error = error.toString()));
       }
     }
     next(action);

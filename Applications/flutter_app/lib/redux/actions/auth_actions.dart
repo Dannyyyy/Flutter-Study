@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_app/redux/models/authorization.dart';
 
-
 class AuthErrorShow { }
 
 class AuthErrorShowSuccessful {
@@ -17,6 +16,13 @@ class SignIn {
   SignIn(this.email, this.password);
 }
 
+class SignUp {
+  final String email;
+  final String password;
+
+  SignUp(this.email, this.password);
+}
+
 class SignInSuccessful {
   final Auth auth;
 
@@ -28,6 +34,17 @@ class SignInSuccessful {
   }
 }
 
+class SignUpSuccessful {
+  final Auth auth;
+
+  SignUpSuccessful({@required this.auth});
+
+  @override
+  String toString() {
+    return "SignUp auth: ${auth}";
+  }
+}
+
 class SignInFail {
   final Auth auth;
 
@@ -36,6 +53,17 @@ class SignInFail {
   @override
   String toString() {
     return "SignIn error: ${auth}";
+  }
+}
+
+class SignUpFail {
+  final Auth auth;
+
+  SignUpFail({@required this.auth});
+
+  @override
+  String toString() {
+    return "SignUp error: ${auth}";
   }
 }
 
