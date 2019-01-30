@@ -19,6 +19,7 @@ class _SignInPageState extends State<SignInPage> {
   final GlobalKey<FormFieldState<String>> _passwordKey = new GlobalKey<FormFieldState<String>>();
 
   Timer _timer;
+  bool visiblePassword = false;
 
   @override
   dispose() {
@@ -120,7 +121,15 @@ class _SignInPageState extends State<SignInPage> {
             key: _emailKey,
           ),
           new TextFormField(
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
+              suffixIcon: new IconButton(
+                icon: new Icon(visiblePassword ?  Icons.visibility : Icons.visibility_off),
+                onPressed:() {
+                  setState(() {
+                    visiblePassword = !visiblePassword;
+                  });
+                }
+              ),
               icon: const Icon(Icons.apps),
               hintText: 'Enter a password',
               labelText: 'Password',
@@ -129,6 +138,7 @@ class _SignInPageState extends State<SignInPage> {
             inputFormatters: [new LengthLimitingTextInputFormatter(10)],
             validator: (val) => isPassword(val),
             key: _passwordKey,
+            obscureText: visiblePassword ? false : true,
           ),
           new Container(
             padding: const EdgeInsets.only(left: 40.0, top: 20.0),

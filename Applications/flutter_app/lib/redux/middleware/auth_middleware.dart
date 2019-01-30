@@ -60,7 +60,7 @@ Middleware<AppState> _createLogOutMiddleware() {
         store.dispatch(LogOutSuccessful(auth: new Auth()..user = null));
       }
       catch(error) {
-        print("Error: ${error}");
+        store.dispatch(LogOutSuccessful(auth: new Auth()..user = null));
       }
     }
     next(action);

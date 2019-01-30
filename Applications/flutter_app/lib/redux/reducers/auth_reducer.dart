@@ -8,7 +8,7 @@ final authReducer = combineReducers<Auth>([
   new TypedReducer<Auth, SignUpSuccessful>(_anyAction),
   new TypedReducer<Auth, SignUpFail>(_anyAction),
   new TypedReducer<Auth, AuthErrorShowSuccessful>(_anyAction),
-  new TypedReducer<Auth, LogOut>(_anyAction),
+  new TypedReducer<Auth, LogOutSuccessful>(_anyAction),
 ]);
 
 Auth _anyAction(Auth auth, action) {
