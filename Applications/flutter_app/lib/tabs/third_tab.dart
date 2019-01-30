@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,7 +47,6 @@ void logError(String code, String message) =>
 class _CameraExampleHomeState extends State<CameraExampleHome> {
   CameraController controller;
   String imagePath;
-
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -245,26 +243,6 @@ class _CameraExampleHomeState extends State<CameraExampleHome> {
   void _showCameraException(CameraException e) {
     logError(e.code, e.description);
     showInSnackBar('Error: ${e.code}\n${e.description}');
-  }
-
-  _exitApp() {
-    return showDialog(
-      context: context,
-      builder : (context) => new AlertDialog(
-        title: new Text('Do you want to go Home?'),
-        content: Image.file(File(imagePath)),
-        actions: <Widget>[
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: new Text('No'),
-          ),
-          new FlatButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: new Text('Yes'),
-          ),
-        ],
-      ),
-    );
   }
 }
 

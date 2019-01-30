@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:validator/validator.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
-import 'package:intl/intl.dart';
 import 'package:flutter_app/services/auth_service.dart';
 
 class SignUpPage extends StatefulWidget {

@@ -1,15 +1,14 @@
-import 'package:flutter_app/models/authorization.dart';
+import 'package:flutter_app/redux/models/authorization.dart';
 
 class AppState {
-  Auth auth;
+  final Auth auth;
 
-  AppState() {
-    auth = new Auth();
-  }
+  AppState({this.auth});
 
   AppState copyWith({Auth auth}) {
-    return new AppState()
-      ..auth = auth ?? this.auth;
+    return new AppState(
+      auth: auth ?? this.auth
+    );
   }
 
   @override

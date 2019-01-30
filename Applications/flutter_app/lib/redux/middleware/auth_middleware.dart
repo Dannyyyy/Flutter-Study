@@ -1,72 +1,58 @@
 import 'package:flutter_app/redux/actions/auth_actions.dart';
 import 'package:flutter_app/redux/app_state.dart';
 import 'package:redux/redux.dart';
-import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_app/models/authorization.dart';
+import 'package:flutter_app/redux/models/authorization.dart';
 
-List<Middleware<AppState>> createAuthMiddleware() {
-  final logIn = _createLogInMiddleware();
+List<Middleware<AppState>> createAuthMiddlewares() {
+  final signIn = _createSignInMiddleware();
   final logOut = _createLogOutMiddleware();
-  final signInPageAway = _createSignInPageAwayMiddleware();
+
+  final authErrorShow = _createAuthErrorShowMiddleware();
 
   List<Middleware<AppState>> _middlewares = new List<Middleware<AppState>>();
 
-  _middlewares.add(new TypedMiddleware<AppState, SignIn>(logIn));
+  _middlewares.add(new TypedMiddleware<AppState, SignIn>(signIn));
   _middlewares.add(new TypedMiddleware<AppState, LogOut>(logOut));
-  _middlewares.add(new TypedMiddleware<AppState, SignInPageAway>(signInPageAway));
+  _middlewares.add(new TypedMiddleware<AppState, AuthErrorShow>(authErrorShow));
 
   return _middlewares;
 }
 
-Middleware<AppState> _createLogInMiddleware() {
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
+Middleware<AppState> _createSignInMiddleware() {
   return (Store store, action, NextDispatcher next) async {
-
-    if (action is SignIn)
-    {
-      try
-      {
-        FirebaseUser user = await _firebaseAuth.signInWithEmailAndPassword(
+    if (action is SignIn) {
+      try {
+        FirebaseUser user = await FirebaseAuth.instance.signInWithEmailAndPassword(
             email: action.email, password: action.password);
-        store.dispatch(SignInSuccessful(auth: store.state.auth..user = user));
+        store.dispatch(SignInSuccessful(auth: new Auth()..user = user));
       }
-      catch(error)
-      {
-        store.dispatch(SignInFail(auth: store.state.auth..error = error.toString()));
+      catch(error) {
+        store.dispatch(SignInFail(auth: new Auth()..error = error.toString()));
       }
     }
-
     next(action);
   };
 }
 
 Middleware<AppState> _createLogOutMiddleware() {
   return (Store store, action, NextDispatcher next) async {
-    final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
     if (action is LogOut) {
-      try
-      {
-        await _firebaseAuth.signOut();
-        store.dispatch(LogOutSuccessful(auth: store.state.auth..user = null));
+      try {
+        await FirebaseAuth.instance.signOut();
+        store.dispatch(LogOutSuccessful(auth: new Auth()..user = null));
       }
-      catch(error)
-      {
+      catch(error) {
         print("Error: ${error}");
       }
     }
-
     next(action);
   };
 }
 
-Middleware<AppState> _createSignInPageAwayMiddleware() {
+Middleware<AppState> _createAuthErrorShowMiddleware() {
   return (Store store, action, NextDispatcher next) async {
-
-    store.dispatch(SignInPageAwaySuccessful(auth: store.state.auth..error = ''));
-
+    store.dispatch(AuthErrorShowSuccessful(auth: new Auth()..error = ''));
     next(action);
   };
 }

@@ -1,17 +1,14 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter_app/models/authorization.dart';
+import 'package:flutter_app/redux/models/authorization.dart';
 
 
-class SignInPageAway {
+class AuthErrorShow { }
 
-}
-
-class SignInPageAwaySuccessful {
+class AuthErrorShowSuccessful {
   final Auth auth;
 
-  SignInPageAwaySuccessful({@required this.auth});
+  AuthErrorShowSuccessful({@required this.auth});
 }
-
 
 class SignIn {
   final String email;
