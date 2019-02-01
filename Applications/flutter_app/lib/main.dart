@@ -18,6 +18,10 @@ import 'package:flutter_app/redux/app_state.dart';
 import 'package:flutter_app/redux/reducers/app_reducer.dart';
 import 'package:flutter_app/redux/middleware/auth_middleware.dart';
 import 'package:redux_logging/redux_logging.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:async';
+import 'package:flutter_app/redux/actions/cloud_message_actions.dart';
+import 'package:flutter_app/redux/models/cloud_message.dart';
 
 List<CameraDescription> cameras = new List<CameraDescription>();
 
@@ -27,10 +31,13 @@ Future<void> main() async {
   } on CameraException catch (e) {
     logError(e.code, e.description);
   }
+
   runApp(App());
 }
 
-class App extends StatelessWidget {
+class _AppState extends State<App> {
+  FirebaseMessaging _firebaseMessaging = new FirebaseMessaging();
+
   final store = new Store<AppState>(
     appReducer,
     initialState: new AppState(),
@@ -38,6 +45,26 @@ class App extends StatelessWidget {
       ..addAll(createAuthMiddlewares())
       ..add(LoggingMiddleware.printer())
   );
+
+  @override
+  void initState() {
+    super.initState();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) {
+        print('on message $message');
+        store.dispatch(ReceivedCloudMessage(CloudMessage.fromDynamic(message)));
+      },
+      onResume: (Map<String, dynamic> message) {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) {
+        print('on launch $message');
+      },
+    );
+    _firebaseMessaging.getToken().then((token){
+      print("Token: ${token}");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,4 +90,9 @@ class App extends StatelessWidget {
       )
     );
   }
+}
+
+class App extends StatefulWidget {
+  @override
+  createState() => new _AppState();
 }

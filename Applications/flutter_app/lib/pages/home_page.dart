@@ -179,6 +179,7 @@ class HomePageState extends State<HomePage> with SingleTickerProviderStateMixin 
 
   @override
   Widget build(BuildContext context) {
+
     return new Builder(builder: (context) =>
       StoreConnector<AppState, HomeStore>(
         converter: HomeStore.fromStore,

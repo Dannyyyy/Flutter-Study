@@ -2,6 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_app/db/db_service.dart';
 import 'package:flutter_app/models/city.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'dart:async';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_app/redux/actions/cloud_message_actions.dart';
+import 'package:flutter_app/redux/app_state.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_app/redux/models/cloud_message.dart';
 
 class DynamicListView extends StatefulWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey;
@@ -167,10 +173,65 @@ class FirstTab extends StatelessWidget {
 
   FirstTab(this._scaffoldKey);
 
+  List<Widget> _buildForm(BuildContext context, FirstTabStore store) {
+    var widgets = new List<Widget>();
+
+    widgets.add(DynamicListView(this._scaffoldKey));
+
+    if (store.notification?.isCloudMessage ?? false) {
+      var notification = store.notification;
+      var modal = new Stack(
+        children: [
+          new Opacity(
+            opacity: 0.3,
+            child: const ModalBarrier(dismissible: false, color: Colors.grey),
+          ),
+        AlertDialog(
+          title: new Text(notification.title.isNotEmpty ? notification.title : "Without title"),
+          content: Text(notification.text.isNotEmpty ? notification.text : "Without text"),
+          actions: <Widget>[
+            RaisedButton(
+              child: Text("Close", style: TextStyle(color: Colors.black54),),
+              color: Colors.grey[300],
+              elevation: 4.0,
+              splashColor: Colors.blueGrey,
+              onPressed: () {store.onMessageShowCallback();}
+            )
+          ],
+        ),
+        ]
+      );
+
+      widgets.add(modal);
+    }
+    return widgets;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return new Container(
-      child: DynamicListView(this._scaffoldKey),
+    return new StoreConnector<AppState, FirstTabStore>(
+      converter: FirstTabStore.fromStore,
+      builder: (BuildContext context, FirstTabStore model) {
+        return new Stack(
+          children: _buildForm(context, model),
+        );
+      }
+    );
+  }
+}
+
+class FirstTabStore {
+  final Function onMessageShowCallback;
+  final CloudMessage notification;
+
+  FirstTabStore({this.notification, this.onMessageShowCallback});
+
+  static FirstTabStore fromStore(Store<AppState> store) {
+    return new FirstTabStore(
+      onMessageShowCallback: () {
+        store.dispatch(CloudMessageShowSuccessful(new CloudMessage()));
+      },
+      notification: store.state.notification
     );
   }
 }
